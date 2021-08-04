@@ -1,4 +1,9 @@
 package com.jslee.pupilbias.data
 
-class LocalDataSource {
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+
+class LocalDataSource constructor(private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : AppDataSource {
+
 }
