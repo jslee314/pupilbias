@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.jslee.pupilbias.home.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_imagesFragment"
+            app:destination="@id/imagesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imagesFragment"
+        android:name="com.jslee.pupilbias.images.ImagesFragment"
+        android:label="ImagesFragment" >
+        <action
+            android:id="@+id/action_imagesFragment_to_pupilSegFragment"
+            app:destination="@id/pupilSegFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pupilBiasAnalFragment"
+        android:name="com.jslee.pupilbias.pupilBiasAnal.PupilBiasAnalFragment"
+        android:label="PupilBiasAnalFragment" >
+        <action
+            android:id="@+id/action_pupilBiasAnalFragment_to_pupilResultFragment"
+            app:destination="@id/pupilResultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pupilResultFragment"
+        android:name="com.jslee.pupilbias.pupilResult.PupilResultFragment"
+        android:label="PupilResultFragment" >
+        <action
+            android:id="@+id/action_pupilResultFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pupilSegFragment"
+        android:name="com.jslee.pupilbias.pupilSeg.PupilSegFragment"
+        android:label="PupilSegFragment" >
+        <action
+            android:id="@+id/action_pupilSegFragment_to_pupilBiasAnalFragment"
+            app:destination="@id/pupilBiasAnalFragment" />
+    </fragment>
+</navigation>
