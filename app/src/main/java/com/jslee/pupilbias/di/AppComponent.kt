@@ -3,9 +3,13 @@ package com.jslee.pupilbias.di
 import android.content.Context
 import com.jslee.pupilbias.home.HomeFragment
 import com.jslee.pupilbias.home.HomeModule
+import com.jslee.pupilbias.images.ImagesFragment
 import com.jslee.pupilbias.images.ImagesModule
+import com.jslee.pupilbias.pupilBiasAnal.PupilBiasAnalFragment
 import com.jslee.pupilbias.pupilBiasAnal.PupilBiasAnalModule
+import com.jslee.pupilbias.pupilResult.PupilResultFragment
 import com.jslee.pupilbias.pupilResult.PupilResultModule
+import com.jslee.pupilbias.pupilSeg.PupilSegFragment
 import com.jslee.pupilbias.pupilSeg.PupilSegModule
 import com.jslee.sdkmanager_kotlin.di.ViewModelBuilderModule
 
@@ -35,11 +39,11 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [
-        AppModule::class, // RemoteDataSource, LocalDataSource, AppDatabase, CoroutineDispatcher
-        ViewModelBuilderModule::class, // ViewModelProvider.Factory
+        AppModule::class,               // RemoteDataSource, LocalDataSource, AppDatabase, CoroutineDispatcher
+        ViewModelBuilderModule::class,  // ViewModelProvider.Factory
 
-        HomeModule::class, // HomeViewModel -> ViewModel
-        ImagesModule::class, // ImagesViewModel -> ViewModel
+        HomeModule::class,      // HomeViewModel -> ViewModel
+        ImagesModule::class,    // ImagesViewModel -> ViewModel
         PupilSegModule::class,
         PupilBiasAnalModule::class,
         PupilResultModule::class
@@ -55,9 +59,10 @@ interface AppComponent {
     // Member-Injection Method : 멤버 파라미터에 의존성 주입 시킬 객체를 넘기는 Method
     //                            인자로 받은 HomeFragment 내부 멤버필드에 의존성 주입
     fun inject(fragment: HomeFragment)
-
-
-
+    fun inject(fragment: ImagesFragment)
+    fun inject(fragment: PupilSegFragment)
+    fun inject(fragment: PupilBiasAnalFragment)
+    fun inject(fragment: PupilResultFragment)
 }
 /**
  *  팩토리 패턴
