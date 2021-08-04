@@ -10,37 +10,11 @@
             type="com.jslee.pupilbias.home.HomeViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:gravity="center"
-            android:text="분석을 원하시는 이미지를 선택해주세요"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            tools:text="분석을 원하시는 이미지를 선택해주세요" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/photos_grid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="6dp"
-            android:clipToPadding="false"
-            app:layoutManager= "androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fail_btn"
-            app:spanCount="2"
-            tools:itemCount="16"
-            tools:BA_listitem="@layout/grid_view_item" />
-<!--        app:BA_listData="@{viewModel.properties}"-->
-
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

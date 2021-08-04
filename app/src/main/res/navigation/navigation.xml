@@ -8,7 +8,8 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.jslee.pupilbias.home.HomeFragment"
-        android:label="HomeFragment" >
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_imagesFragment"
             app:destination="@id/imagesFragment" />
@@ -16,7 +17,8 @@
     <fragment
         android:id="@+id/imagesFragment"
         android:name="com.jslee.pupilbias.images.ImagesFragment"
-        android:label="ImagesFragment" >
+        android:label="ImagesFragment"
+        tools:layout="@layout/fragment_images">
         <action
             android:id="@+id/action_imagesFragment_to_pupilSegFragment"
             app:destination="@id/pupilSegFragment" />
@@ -24,7 +26,8 @@
     <fragment
         android:id="@+id/pupilBiasAnalFragment"
         android:name="com.jslee.pupilbias.pupilBiasAnal.PupilBiasAnalFragment"
-        android:label="PupilBiasAnalFragment" >
+        android:label="PupilBiasAnalFragment"
+        tools:layout="@layout/fragment_pupil_bias_anal">
         <action
             android:id="@+id/action_pupilBiasAnalFragment_to_pupilResultFragment"
             app:destination="@id/pupilResultFragment" />
@@ -32,7 +35,8 @@
     <fragment
         android:id="@+id/pupilResultFragment"
         android:name="com.jslee.pupilbias.pupilResult.PupilResultFragment"
-        android:label="PupilResultFragment" >
+        android:label="PupilResultFragment"
+    tools:layout="@layout/fragment_pupil_result">
         <action
             android:id="@+id/action_pupilResultFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -40,7 +44,8 @@
     <fragment
         android:id="@+id/pupilSegFragment"
         android:name="com.jslee.pupilbias.pupilSeg.PupilSegFragment"
-        android:label="PupilSegFragment" >
+        android:label="PupilSegFragment"
+    tools:layout="@layout/fragment_pupil_seg">
         <action
             android:id="@+id/action_pupilSegFragment_to_pupilBiasAnalFragment"
             app:destination="@id/pupilBiasAnalFragment" />
