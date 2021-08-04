@@ -7,8 +7,8 @@
     <data>
         <import type="android.view.View"/>
         <variable
-            name="property"
-            type="com.jslee.pupilbias.data.IrisImage"/>
+            name="irisImage"
+            type="com.jslee.pupilbias.data.vo.IrisImage"/>
     </data>
 
     <FrameLayout
