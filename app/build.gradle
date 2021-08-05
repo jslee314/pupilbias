@@ -12,13 +12,23 @@ android {
 
     defaultConfig {
         applicationId "com.jslee.pupilbias"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+
+        ndk {
+            abiFilters "armeabi-v7a", "x86", "arm64-v8a"
+        }
+
+        packagingOptions {
+            exclude "lib/arm64-v8a/libtensorflowlite_gpu_jni.so"
+            exclude "lib/arm64-v8a/libtensorflowlite_jni.so"
+        }
     }
 
     buildTypes {
@@ -44,6 +54,10 @@ android {
 
     dataBinding {
         enabled = true
+    }
+
+    aaptOptions {
+        noCompress "tflite"
     }
 }
 
@@ -100,5 +114,14 @@ dependencies {
     def dagger_version = "2.27"
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    implementation 'org.tensorflow:tensorflow-lite:2.3.0'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:2.3.0'
+    implementation 'org.tensorflow:tensorflow-lite-support:0.1.0'
+
+//    def tensorflow_ver = "0.0.0-nightly"
+//    implementation("org.tensorflow:tensorflow-lite:$tensorflow_ver") { changing = true }
+//    implementation("org.tensorflow:tensorflow-lite-gpu:$tensorflow_ver") { changing = true }
+//    implementation("org.tensorflow:tensorflow-lite-support:$tensorflow_ver") { changing = true }
 
 }

@@ -39,7 +39,7 @@
             android:id="@+id/anal_img_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="분석 영상"
+            android:text="동공 분할 영상"
             app:layout_constraintBottom_toTopOf="@+id/anal_img_iw"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
