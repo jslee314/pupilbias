@@ -1,7 +1,6 @@
 package com.jslee.pupilbias.images
 
 import android.content.Context
-import android.content.res.AssetManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -35,8 +34,6 @@ class ImagesFragment: Fragment() {
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_images,container,false)
 
-        val assetManager = resources.assets
-
         setUpBinding()
         setUpView()
         setUpObserver()
@@ -58,7 +55,6 @@ class ImagesFragment: Fragment() {
             propertyOnClickListener = PhotoGridAdapter.MarsOnClickListener(
                 clkListener = viewModel::onClickedNextBtn // ::(리플렉션) : 내가 참조하려는 클래스 혹은 메소드을 찾기위해 사용
             ))
-
     }
 
     private fun setUpObserver(){
@@ -66,9 +62,8 @@ class ImagesFragment: Fragment() {
         viewModel.isClickedNextBtn.observe(viewLifecycleOwner, Observer {
             if ( null != it ) {
                 this.findNavController().navigate(
-                    ImagesFragmentDirections.actionImagesFragmentToPupilSegFragment()
+                    ImagesFragmentDirections.actionImagesFragmentToPupilSegFragment(it)
                 )
-
                 viewModel.displayPropertyDetailsComplete()
             }
         })

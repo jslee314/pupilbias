@@ -32,7 +32,7 @@
             app:layoutManager= "androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="2"
             tools:itemCount="16"
-            app:BA_listData="@{viewModel.irisImage}" />
+            app:BA_listData="@{viewModel.irisImages}" />
 
     </LinearLayout>
 

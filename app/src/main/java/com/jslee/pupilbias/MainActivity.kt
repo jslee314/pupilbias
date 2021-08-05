@@ -19,8 +19,6 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
     }
 
-
-
     override fun onBackPressed() {
         var tempTime:Long = System.currentTimeMillis();
         var intervalTime = tempTime - backPressedTime;

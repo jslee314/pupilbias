@@ -13,7 +13,6 @@ import androidx.navigation.fragment.navArgs
 import com.jslee.pupilbias.MyApplication
 import com.jslee.pupilbias.R
 import com.jslee.pupilbias.databinding.FragmentPupilSegBinding
-import com.jslee.pupilbias.home.HomeViewModel
 import javax.inject.Inject
 
 class PupilSegFragment: Fragment() {
@@ -25,7 +24,7 @@ class PupilSegFragment: Fragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<PupilSegViewModel> { viewModelFactory } // by viewModels()을 사용하여 viewModel 지연생성
 
-//    private val args: PupilSegFragmentArgs by navArgs()
+    private val args: PupilSegFragmentArgs by navArgs()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -52,6 +51,8 @@ class PupilSegFragment: Fragment() {
 
         //binding의 lifecycle owner로 fragment view를 지정 -> 이로써,,바인딩이 LiveData 업데이트를 관찰 할 수 있도함
         binding.lifecycleOwner = this
+
+        viewModel.start(args.selectedImage)
 
     }
 

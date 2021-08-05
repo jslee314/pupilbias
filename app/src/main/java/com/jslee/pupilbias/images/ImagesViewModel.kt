@@ -2,7 +2,6 @@ package com.jslee.pupilbias.images
 
 import android.content.res.AssetManager
 import android.graphics.drawable.Drawable
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +17,7 @@ class ImagesViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _irisImages = MutableLiveData<MutableList<IrisImage>>()
-    val irisImage: LiveData<MutableList<IrisImage>>
+    val irisImages: LiveData<MutableList<IrisImage>>
         get() = _irisImages
 
     /** 다음 버튼 클릭 여부*/
@@ -28,10 +27,8 @@ class ImagesViewModel @Inject constructor(
 
     fun start(assetManager: AssetManager){
         _irisImages.value = mutableListOf<IrisImage>()
-
         setIrisImage(assetManager)
     }
-//    var irisList: ArrayList<Drawable> = ArrayList()
 
     private fun setIrisImage(assetManager: AssetManager){
 
@@ -39,19 +36,10 @@ class ImagesViewModel @Inject constructor(
             var inputStream: InputStream
             var files = assetManager.list("iris")
             for(i in files!!.indices) {
-
                 inputStream = assetManager.open("iris/" + files[i])
-                Log.d("jjslee", "files : " + files[i] + "  /  : " + i)
-
                 val drawable: Drawable = Drawable.createFromStream(inputStream, null)
-//                irisList.add(i, drawable)
-
                 val irisImg: IrisImage = IrisImage(id = i , imgSrcUrl = drawable)
                 _irisImages.value?.add(irisImg)
-
-//                _irisImages.value = listOf<IrisImage>(
-//                    IrisImage(id = i , imgSrcUrl = drawable)
-//                )
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -60,7 +48,6 @@ class ImagesViewModel @Inject constructor(
 
     /**
      *  버튼 클릭 시 수행되는 함수들     */
-
     /*** RecyclerView의 하나의 아이템을 클릭하면
      * [_navigateToSelectedProperty] [MutableLiveData]를 설정한다.
      * [groundProperty]:  클릭 된 GroundProperty */
