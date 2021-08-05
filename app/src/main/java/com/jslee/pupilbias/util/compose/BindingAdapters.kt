@@ -1,5 +1,6 @@
 package com.jslee.pupilbias.util
 
+import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
@@ -15,11 +16,10 @@ import com.jslee.pupilbias.images.PhotoGridAdapter
  * Glide 라이브러리를 사용해서 이미지를 로드하는 기능
  *  URL 스트링을 -> [ImageView]에 로드함  */
 @BindingAdapter("BA_imageUrl")
-fun bindImage(imgView: ImageView, drawable: Int) {
+fun bindImage(imgView: ImageView, drawable: Drawable) {
 
     // imgUrl이 null 이 아닐경우 수행 >>>>>  let() + ?.
     drawable?.let {
-
         Glide.with(imgView.context)         // Uri 개체에서 ImageView로 이미지를 로드함 with().load(imgUri).into(imgView)
             .load(drawable)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -35,7 +35,7 @@ fun bindImage(imgView: ImageView, drawable: Int) {
  * 그렇지 않으면 표시 하는 기능
  */
 @BindingAdapter("BA_listData")
-fun bindRecyclerView(recyclerView: RecyclerView, data: List<IrisImage>?) {
+fun bindRecyclerView(recyclerView: RecyclerView, data: MutableList<IrisImage>?) {
     val adapter = recyclerView.adapter as PhotoGridAdapter
     adapter.submitList(data)
 }

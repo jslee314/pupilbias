@@ -1,6 +1,7 @@
 package com.jslee.pupilbias.images
 
 import android.content.Context
+import android.content.res.AssetManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +20,6 @@ import javax.inject.Inject
 class ImagesFragment: Fragment() {
 
     private lateinit var binding : FragmentImagesBinding
-    // 지연 주입
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<ImagesViewModel> { viewModelFactory } // by viewModels()을 사용하여 viewModel 지연생성
@@ -35,6 +35,8 @@ class ImagesFragment: Fragment() {
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_images,container,false)
 
+        val assetManager = resources.assets
+
         setUpBinding()
         setUpView()
         setUpObserver()
@@ -46,6 +48,7 @@ class ImagesFragment: Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        viewModel.start(resources.assets)
     }
 
     private fun setUpView(){
