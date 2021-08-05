@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.jslee.pupilbias.MyApplication
 import com.jslee.pupilbias.R
 import com.jslee.pupilbias.databinding.FragmentHomeBinding
@@ -57,6 +59,14 @@ class HomeFragment: Fragment() {
 
     private fun setUpObserver(){
 
+        viewModel.isClickedNextBtn.observe(viewLifecycleOwner, Observer<Boolean> { isClicked ->
+            if(isClicked){
+                this.findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToImagesFragment()
+                )
+
+            }
+        })
     }
 }
 
