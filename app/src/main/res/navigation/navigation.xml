@@ -45,9 +45,12 @@
         android:id="@+id/pupilSegFragment"
         android:name="com.jslee.pupilbias.pupilSeg.PupilSegFragment"
         android:label="PupilSegFragment"
-    tools:layout="@layout/fragment_pupil_seg">
+        tools:layout="@layout/fragment_pupil_seg">
         <action
             android:id="@+id/action_pupilSegFragment_to_pupilBiasAnalFragment"
             app:destination="@id/pupilBiasAnalFragment" />
+<!--        <argument-->
+<!--            android:name="selectedImage"-->
+<!--            app:argType="com.jslee.pupilbias.data.vo.IrisImage" />-->
     </fragment>
 </navigation>

@@ -14,5 +14,78 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/orig_img_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="원본 영상"
+            app:layout_constraintBottom_toTopOf="@+id/orig_img_iw"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/orig_img_iw"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:layout_constraintBottom_toTopOf="@+id/anal_img_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/orig_img_tv"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/anal_img_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="분석 영상"
+            app:layout_constraintBottom_toTopOf="@+id/anal_img_iw"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/orig_img_iw" />
+
+        <ImageView
+            android:id="@+id/anal_img_iw"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:layout_constraintBottom_toTopOf="@+id/center_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/anal_img_tv"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <Button
+            android:id="@+id/center_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="무게중심(blue)"
+            style="?attr/materialButtonOutlinedStyle"
+            app:layout_constraintBottom_toTopOf="@+id/next_btn"
+            app:layout_constraintEnd_toStartOf="@+id/circle_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/anal_img_iw" />
+
+        <Button
+            android:id="@+id/circle_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예측원(red)"
+            style="?attr/materialButtonStyle"
+            app:layout_constraintBottom_toBottomOf="@+id/center_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/center_btn"
+            app:layout_constraintTop_toTopOf="@+id/center_btn" />
+
+        <Button
+            android:id="@+id/next_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="동공분석 시작하기"
+            android:onClick="@{() -> viewModel.onClickedNextBtn()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/center_btn" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
