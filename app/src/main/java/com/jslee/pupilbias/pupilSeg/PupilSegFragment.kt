@@ -18,6 +18,7 @@ import androidx.navigation.fragment.navArgs
 import com.jslee.pupilbias.MyApplication
 import com.jslee.pupilbias.R
 import com.jslee.pupilbias.databinding.FragmentPupilSegBinding
+import org.opencv.core.Mat
 import tensorflowlite.model.SegmentationModelExecutor
 import javax.inject.Inject
 
@@ -35,6 +36,7 @@ class PupilSegFragment: Fragment() {
 
     private lateinit var mContext: Context
     private var pupilSegmentationModel: SegmentationModelExecutor? = null
+
 
     override fun onAttach(context: Context) {
         mContext = context
@@ -95,10 +97,12 @@ class PupilSegFragment: Fragment() {
         val maskWidth: Int = viewModel.irisImage.value!!.imgWidth
         val maskHeight: Int = viewModel.irisImage.value!!.imgHeight
 
-//        // [STEP 1]: 동공마스크의 무게중심 구하기
+
+        // [STEP 1]: 동공마스크의 무게중심 구하기
 //        val centroid: Point = getPupilCenter(bitmapMaskOnly, maskWidth, maskHeight)
 //        viewModel.irisImage.value!!.pupilCenterX = centroid.x
 //        viewModel.irisImage.value!!.pupilCenterY = centroid.y
+
 
 
 //        // [STEP 2]: 동공마스크의 예측원 반지름 구하기
