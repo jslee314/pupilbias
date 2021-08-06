@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "com.jslee.pupilbias"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -123,5 +123,7 @@ dependencies {
 //    implementation("org.tensorflow:tensorflow-lite:$tensorflow_ver") { changing = true }
 //    implementation("org.tensorflow:tensorflow-lite-gpu:$tensorflow_ver") { changing = true }
 //    implementation("org.tensorflow:tensorflow-lite-support:$tensorflow_ver") { changing = true }
+
+//    implementation project(path: ':opencv')
 
 }

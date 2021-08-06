@@ -54,8 +54,7 @@ class SegmentationModelExecutor(context: Context, mode: Int, private var useGPU:
 //            STRESSRING_MODEL -> imageSegmentationModel = "stressring_model_v1.tflite"
 //            CHOLESTEROLRING_MODEL -> imageSegmentationModel = "cholesterolring_model_v1.tflite"
 //            ABSORPTIONRING_MODEL -> imageSegmentationModel = "absorptionring_model_v2.tflite"
-
-            AUTONERVOUS_MODEL -> imageSegmentationModel = "autonervous_model_sota.tflite"
+//            AUTONERVOUS_MODEL -> imageSegmentationModel = "autonervous_model_sota.tflite"
 
             PUPIL_MODEL -> {
                 IMAGE_WIDTH = 512
