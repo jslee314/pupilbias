@@ -31,6 +31,7 @@ fun bindImage(imgView: ImageView, drawable: Drawable) {
     }
 }
 
+
 /** [GroundProperty] 데이터가없는 경우 (데이터가 null) [RecyclerView]를 숨기고
  * 그렇지 않으면 표시 하는 기능
  */

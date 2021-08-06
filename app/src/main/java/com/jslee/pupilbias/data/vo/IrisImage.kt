@@ -13,6 +13,7 @@ data class IrisImage (
 
 ) : Parcelable {
 
+    lateinit var bitmapMaskOnly: Drawable
 
     var imgWidth: Int = 640
     var imgHeight:Int = 480

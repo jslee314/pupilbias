@@ -1,7 +1,10 @@
 package com.jslee.pupilbias.pupilSeg
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Point
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -36,7 +39,6 @@ class PupilSegFragment: Fragment() {
     override fun onAttach(context: Context) {
         mContext = context
         super.onAttach(context)
-        // Ask Dagger to inject our dependencies
         (requireActivity().application as MyApplication)
             .appComponent.inject(this)
     }
@@ -87,16 +89,18 @@ class PupilSegFragment: Fragment() {
             pupilSegmentationModel = null
         }
 
-//        val maskWidth: Int = irisImgInfo.getIrisImgW()
-//        val maskHeight: Int = irisImgInfo.getIrisImgH()
-//
+        val resources: Resources = this.resources
+        val maskDrawable = BitmapDrawable(resources, bitmapMaskOnly)
+        viewModel.irisImage.value!!.bitmapMaskOnly = maskDrawable
+        val maskWidth: Int = viewModel.irisImage.value!!.imgWidth
+        val maskHeight: Int = viewModel.irisImage.value!!.imgHeight
+
 //        // [STEP 1]: 동공마스크의 무게중심 구하기
-//
-//        // [STEP 1]: 동공마스크의 무게중심 구하기
-//        val centroid: Point = setPAndI.getPupilCenter(bitmapMaskOnly, maskWidth, maskHeight)
-//        irisImgInfo.setPpCntrX(centroid.x as Int)
-//        irisImgInfo.setPpCntrY(centroid.y as Int)
-//
+//        val centroid: Point = getPupilCenter(bitmapMaskOnly, maskWidth, maskHeight)
+//        viewModel.irisImage.value!!.pupilCenterX = centroid.x
+//        viewModel.irisImage.value!!.pupilCenterY = centroid.y
+
+
 //        // [STEP 2]: 동공마스크의 예측원 반지름 구하기
 //        // getBitmapMaskOnly: Pupil Mask Image.
 //        // getBitmapResult: Iris + Pupil Mask Image.

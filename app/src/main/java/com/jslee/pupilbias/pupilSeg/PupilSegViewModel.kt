@@ -20,14 +20,14 @@ class PupilSegViewModel @Inject constructor(
     val isClickedNextBtn: LiveData<Boolean>
         get() = _isClickedNextBtn
 
-    /**
-     *  버튼 클릭 시 수행되는 함수들     */
-    fun onClickedNextBtn(){
-        _isClickedNextBtn.value = true
-    }
 
     fun start (irisImage: IrisImage){
         _irisImage.value = irisImage
     }
 
+    /**
+     *  버튼 클릭 시 수행되는 함수들     */
+    fun onClickedNextBtn(){
+        _isClickedNextBtn.value = true
+    }
 }

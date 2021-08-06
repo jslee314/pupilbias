@@ -22,10 +22,10 @@ class AutoSetPupilAndIris {
 //     * @버젼 :
 //     * */
 //    fun getPupilCenter(grayMaskBitmap: Bitmap?, maskWidth: Int, maskHeight: Int): Point? {
-//
+
 //        // step 0: 이미지 resize
-//        resizedBitmap = Bitmap.createScaledBitmap(grayMaskBitmap!!, maskWidth, maskHeight, true)
-//        grayMat = Mat()
+//        var resizedBitmap = Bitmap.createScaledBitmap(grayMaskBitmap!!, maskWidth, maskHeight, true)
+//        var grayMat = Mat()
 //        Utils.bitmapToMat(resizedBitmap, grayMat)
 //        Imgproc.cvtColor(grayMat, grayMat, Imgproc.COLOR_RGB2GRAY)
 //
