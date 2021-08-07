@@ -2,11 +2,9 @@ package com.jslee.pupilbias.pupilSeg
 
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Point
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,10 +16,10 @@ import androidx.navigation.fragment.navArgs
 import com.jslee.pupilbias.MyApplication
 import com.jslee.pupilbias.R
 import com.jslee.pupilbias.databinding.FragmentPupilSegBinding
-import org.opencv.core.Mat
+import org.opencv.core.Point
+import tensorflowlite.data.ModelExecutionResultVO
 import tensorflowlite.model.SegmentationModelExecutor
 import javax.inject.Inject
-
 
 class PupilSegFragment: Fragment() {
 
@@ -36,7 +34,6 @@ class PupilSegFragment: Fragment() {
 
     private lateinit var mContext: Context
     private var pupilSegmentationModel: SegmentationModelExecutor? = null
-
 
     override fun onAttach(context: Context) {
         mContext = context
@@ -58,6 +55,7 @@ class PupilSegFragment: Fragment() {
     }
 
     private fun setUpBinding(){
+
         // databinding을 위한 viewmodel 셋팅 -VieWModel의 모든 데이터에 바인딩 된 레이아웃 액세스를 허용
         binding.viewModel = viewModel
 
@@ -65,26 +63,20 @@ class PupilSegFragment: Fragment() {
         binding.lifecycleOwner = this
 
         viewModel.start(args.selectedImage)
-
     }
 
     private fun setUpView(){
+        val irisImgInfo = viewModel.irisImage.value!!
+        val bitmapDrawable = irisImgInfo.imgSrcUrl as BitmapDrawable
 
         // 동공, 홍채의 인공지능 Segmentation 결과 가져오기
+        pupilSegmentationModel = SegmentationModelExecutor(mContext, SegmentationModelExecutor.PUPIL_MODEL, false)
 
+        val (bitmapResult, bitmapOriginal, bitmapMaskOnly, executionLog, itemsFound) = pupilSegmentationModel!!.execute(
+            bitmapDrawable.bitmap, SegmentationModelExecutor.PUPIL_MODEL)
 
-        // 동공, 홍채의 인공지능 Segmentation 결과 가져오기
-        pupilSegmentationModel = SegmentationModelExecutor(
-            mContext,
-            SegmentationModelExecutor.PUPIL_MODEL,
-            false
-        )
-        val bitmapDrawable = viewModel.irisImage.value!!.imgSrcUrl as BitmapDrawable
-
-        val (bitmapResult, _, bitmapMaskOnly) = pupilSegmentationModel!!.execute(
-            bitmapDrawable.bitmap,
-            SegmentationModelExecutor.PUPIL_MODEL
-        )
+        val pupilExecutionResultVO: ModelExecutionResultVO = pupilSegmentationModel!!.execute(
+            bitmapDrawable.bitmap, SegmentationModelExecutor.PUPIL_MODEL)
 
         if (pupilSegmentationModel != null) {
             pupilSegmentationModel!!.close()
@@ -93,34 +85,22 @@ class PupilSegFragment: Fragment() {
 
         val resources: Resources = this.resources
         val maskDrawable = BitmapDrawable(resources, bitmapMaskOnly)
-        viewModel.irisImage.value!!.bitmapMaskOnly = maskDrawable
-        val maskWidth: Int = viewModel.irisImage.value!!.imgWidth
-        val maskHeight: Int = viewModel.irisImage.value!!.imgHeight
+        irisImgInfo.bitmapMaskOnly = maskDrawable
+        irisImgInfo.segmentationLog = executionLog
 
+        val maskWidth: Int = irisImgInfo.imgWidth
+        val maskHeight: Int = irisImgInfo.imgHeight
 
         // [STEP 1]: 동공마스크의 무게중심 구하기
-//        val centroid: Point = getPupilCenter(bitmapMaskOnly, maskWidth, maskHeight)
-//        viewModel.irisImage.value!!.pupilCenterX = centroid.x
-//        viewModel.irisImage.value!!.pupilCenterY = centroid.y
+        val autoSetPupilAndIris = AutoSetPupilAndIris()
+        val centroid: Point = autoSetPupilAndIris.getPupilCenter(pupilExecutionResultVO.bitmapMaskOnly, maskWidth, maskHeight)!!
+        irisImgInfo.pupilCenterX = centroid.x.toInt()
+        irisImgInfo.pupilCenterY = centroid.y.toInt()
+        Log.d("jjslee", "pupilCenterX : " + centroid.x.toInt() + ",  pupilCenterY : " + centroid.y.toInt())
 
-
-
-//        // [STEP 2]: 동공마스크의 예측원 반지름 구하기
-//        // getBitmapMaskOnly: Pupil Mask Image.
-//        // getBitmapResult: Iris + Pupil Mask Image.
-//
-//        // [STEP 2]: 동공마스크의 예측원 반지름 구하기
-//        // getBitmapMaskOnly: Pupil Mask Image.
-//        // getBitmapResult: Iris + Pupil Mask Image.
-//        irisImgInfo.setPpR(setPAndI.getRadius(irisImgInfo, bitmapMaskOnly, maskWidth, maskHeight))
-//        irisImgInfo.setIrisR(
-//            setPAndI.getRadius(
-//                irisImgInfo,
-//                bitmapResult, maskWidth, maskHeight
-//            )
-//        )
-//        irisImgInfo.setAnwR(setPAndI.getAutoNerveWaveRadious(irisImgInfo))
-
+        // [STEP 2]: 동공마스크의 예측원 반지름 구하기
+        irisImgInfo.pupilRadius = autoSetPupilAndIris.getRadius(irisImgInfo, pupilExecutionResultVO.bitmapMaskOnly, maskWidth, maskHeight)
+        Log.d("jjslee", "pupilRadius : " + irisImgInfo.pupilRadius)
 
     }
 

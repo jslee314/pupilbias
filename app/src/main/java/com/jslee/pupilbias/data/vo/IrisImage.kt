@@ -7,13 +7,14 @@ import kotlinx.android.parcel.RawValue
 
 @Parcelize
 data class IrisImage (
-    val id: Int,
-    val fileName: String,
-    val imgSrcUrl: @RawValue Drawable
+    val id: Int?,
+    val fileName: String?,
+    val imgSrcUrl: @RawValue Drawable?
 
 ) : Parcelable {
 
     lateinit var bitmapMaskOnly: Drawable
+    lateinit var  segmentationLog: String
 
     var imgWidth: Int = 640
     var imgHeight:Int = 480
@@ -21,5 +22,6 @@ data class IrisImage (
     var pupilCenterX:Int = 0
     var pupilCenterY:Int = 0
 
+    var pupilRadius:Int = 0
 
 }
