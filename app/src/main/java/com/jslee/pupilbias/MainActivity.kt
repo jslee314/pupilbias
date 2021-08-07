@@ -30,4 +30,60 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        if (!OpenCVLoader.initDebug()) {
+//            Log.d(
+//                "jjslee",
+//                "Internal OpenCV library not found. Using OpenCV Manager for initialization"
+//            )
+//            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback)
+//        } else {
+//            Log.d("jjslee", "OpenCV library found inside package. Using it!")
+//            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)
+//        }
+//    }
+//
+//    private val mLoaderCallback: BaseLoaderCallback =
+//        object : BaseLoaderCallback(this) {
+//            override fun onManagerConnected(status: Int) {
+//                when (status) {
+//                    LoaderCallbackInterface.SUCCESS -> {
+//                        Log.i(
+//                            "jjslee",
+//                            "OpenCV loaded successfully"
+//                        )
+//                    }
+//                    else -> {
+//                        super.onManagerConnected(status)
+//                    }
+//                }
+//            }
+//        }
+
+//    override fun onResume() {
+//        super.onResume()
+//        if (!OpenCVLoader.initDebug()) {
+//            Log.d("OpenCV", "Internal OpenCV library not found. Using OpenCV Manager for initialization")
+//            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback)
+//        } else {
+//            Log.d("OpenCV", "OpenCV library found inside package. Using it!")
+//            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS)
+//        }
+//    }
+//
+//    private val mLoaderCallback: BaseLoaderCallback = object : BaseLoaderCallback(this) {
+//        override fun onManagerConnected(status: Int) {
+//            when (status) {
+//                LoaderCallbackInterface.SUCCESS -> {
+//                    Log.i("OpenCV", "OpenCV loaded successfully")
+//                    //imageMat = Mat()
+//                }
+//                else -> {
+//                    super.onManagerConnected(status)
+//                }
+//            }
+//        }
+//    }
 }

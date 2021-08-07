@@ -21,14 +21,16 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
+        // "armeabi-v7a", "arm64-v8a"      o
+        //  "x86" , "x86_64", "arm32"        x
         ndk {
-            abiFilters "armeabi-v7a", "x86", "arm64-v8a"
+            abiFilters "armeabi-v7a", "arm64-v8a"
         }
 
-        packagingOptions {
-            exclude "lib/arm64-v8a/libtensorflowlite_gpu_jni.so"
-            exclude "lib/arm64-v8a/libtensorflowlite_jni.so"
-        }
+//        packagingOptions {//  패키징시에 제외할 파일
+//            exclude "lib/arm64-v8a/libtensorflowlite_gpu_jni.so"
+//            exclude "lib/arm64-v8a/libtensorflowlite_jni.so"
+//        }
     }
 
     buildTypes {
@@ -37,13 +39,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
     buildFeatures {
         dataBinding true
     }
@@ -115,18 +120,73 @@ dependencies {
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
+//    def tensorflow_ver = "0.0.0-nightly"
+//    implementation "org.tensorflow:tensorflow-lite:$tensorflow_ver"
+//    implementation "org.tensorflow:tensorflow-lite-gpu:$tensorflow_ver"
+//    implementation "org.tensorflow:tensorflow-lite-support:$tensorflow_ver"
+
+    implementation 'org.tensorflow:tensorflow-android:1.6.0'
+
     implementation 'org.tensorflow:tensorflow-lite:2.3.0'
     implementation 'org.tensorflow:tensorflow-lite-gpu:2.3.0'
     implementation 'org.tensorflow:tensorflow-lite-support:0.1.0'
+
+//    implementation "org.bytedeco:javacv:1.4.4"
+//    implementation "org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4"
+//    implementation "org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-arm"
 
 //    def tensorflow_ver = "0.0.0-nightly"
 //    implementation("org.tensorflow:tensorflow-lite:$tensorflow_ver") { changing = true }
 //    implementation("org.tensorflow:tensorflow-lite-gpu:$tensorflow_ver") { changing = true }
 //    implementation("org.tensorflow:tensorflow-lite-support:$tensorflow_ver") { changing = true }
 
-//    implementation project(path: ':opencv')
+    implementation project(":opencv")
 
-    implementation "org.bytedeco:javacv:1.4.1"
-    implementation "org.bytedeco.javacpp-presets:opencv:3.4.1-1.4.1:android-arm"
+
+//    implementation "org.bytedeco:javacv:1.4.4"
+////    implementation "org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4"
+//    implementation "org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-arm64"
+////    implementation "org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-arm"
+////    implementation "org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-x86"
+
+//    implementation 'org.bytedeco:javacv:1.1'
+//    implementation 'org.bytedeco.javacpp-presets:opencv:3.0.0-1.1:android-x86' // android-arm
+//    implementation 'org.bytedeco.javacpp-presets:ffmpeg:2.8.1-1.1:android-x86' // android-arm
+
+//    implementation "org.bytedeco:javacv:1.3.2"
+//    implementation "org.bytedeco.javacpp-presets:opencv:3.2.0-1.3"
+//    implementation "org.bytedeco.javacpp-presets:ffmpeg:3.2.1-1.3"
+
+    //==============================================================================================
+
+
+//    implementation "org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4"
+//    No implementation found for long org.opencv.core.Mat.n_Mat() (tried Java_org_opencv_core_Mat_n_1Mat and Java_org_opencv_core_Mat_n_1Mat__)
+
+//    implementation "org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-arm64"
+//    java.lang.UnsatisfiedLinkError: Failed to load native TensorFlow Lite methods.
+//    Check that the correct native libraries are present, and, if using a custom native library, have been properly loaded via System.loadLibrary():
+//    java.lang.UnsatisfiedLinkError: dalvik.system.PathClassLoader[DexPathList[[zip file "/data/app/com.jslee.pupilbias-ruyp6NoMkGKuPjqsxZI7Qw==/base.apk"],
+//    nativeLibraryDirectories=[/data/app/com.jslee.pupilbias-ruyp6NoMkGKuPjqsxZI7Qw==/lib/arm64, /data/app/com.jslee.pupilbias-ruyp6NoMkGKuPjqsxZI7Qw==/base.apk!/lib/arm64-v8a, /system/lib64]]]
+//    couldn't find "libtensorflowlite_jni.so"
+
+//    implementation "org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-arm"
+//    No implementation found for long org.opencv.core.Mat.n_Mat() (tried Java_org_opencv_core_Mat_n_1Mat and Java_org_opencv_core_Mat_n_1Mat__)
+
+
+//    implementation "org.bytedeco.javacpp-presets:opencv:4.0.1-1.4.4:android-x86"
+//    E/jslee.pupilbia: No implementation found for long org.opencv.core.Mat.n_Mat() (tried Java_org_opencv_core_Mat_n_1Mat and Java_org_opencv_core_Mat_n_1Mat__)
+//    No implementation found for long org.opencv.core.Mat.n_Mat() (tried Java_org_opencv_core_Mat_n_1Mat and Java_org_opencv_core_Mat_n_1Mat__)
+
+//==============================================================================================
+
+//    implementation group: 'org.bytedeco', name: 'opencv', version: '4.1.0-1.5.1'
+//    implementation group: 'org.bytedeco', name: 'opencv', version: '4.1.0-1.5.1', classifier: "android-arm"
+
+//    implementation 'org.bytedeco:javacv:1.4.1'
+//    implementation 'org.bytedeco.javacpp-presets:opencv:3.4.1-1.4.1:android-arm'
+
+//    implementation "com.quickbirdstudios:opencv:4.3.0"
+//    implementation "com.quickbirdstudios:opencv:3.4.1"
 
 }

@@ -3,13 +3,21 @@ package com.jslee.pupilbias
 import android.app.Application
 import com.jslee.pupilbias.di.AppComponent
 import com.jslee.pupilbias.di.DaggerAppComponent
+import org.opencv.android.OpenCVLoader
 
 
 class MyApplication: Application() {
 
+    companion object {
+        init {
+            OpenCVLoader.initDebug()
+        }
+    }
+
     // 프로젝트의 모든 활동에서 사용할 AppComponent 인스턴스
     val appComponent: AppComponent by lazy {
         initializeComponent()
+
     }
 
     fun initializeComponent(): AppComponent {
