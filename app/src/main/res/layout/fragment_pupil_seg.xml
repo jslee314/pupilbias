@@ -83,8 +83,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/anal_img_btn"
-                    tools:srcCompat="@tools:sample/avatars"
-                    app:BA_img_status = "@{viewModel.irisImage.viewSeg}"/>
+                    tools:srcCompat="@tools:sample/avatars" />
 
                 <TextView
                     android:id="@+id/anal_img_tv"
@@ -95,8 +94,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/anal_img_iw"
-                    tools:text="인공지능 분석 결과 보기~~~~~~~"
-                    app:BA_text_status = "@{viewModel.irisImage.viewSeg}" />
+                    tools:text="인공지능 분석 결과 보기~~~~~~~" />
 
                 <Button
                     android:id="@+id/center_btn"

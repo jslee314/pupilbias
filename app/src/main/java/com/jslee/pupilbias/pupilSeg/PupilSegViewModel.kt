@@ -1,10 +1,16 @@
 package com.jslee.pupilbias.pupilSeg
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jslee.pupilbias.data.AppRepository
 import com.jslee.pupilbias.data.vo.IrisImage
+import org.opencv.core.Point
+import tensorflowlite.data.ModelExecutionResultVO
+import tensorflowlite.model.SegmentationModelExecutor
 import javax.inject.Inject
 
 class PupilSegViewModel @Inject constructor(
@@ -48,15 +54,16 @@ class PupilSegViewModel @Inject constructor(
         _isClickedSegPupilBtn.value = true
     }
 
-    fun onClickedNextBtn(){
-        _isClickedNextBtn.value = true
-    }
-
     fun onClickedCenterBtn(){
         _isClickedCenterBtn.value = true
     }
 
     fun onClickedCircleBtn(){
         _isClickedCircleBtn.value = true
+    }
+
+
+    fun onClickedNextBtn(){
+        _isClickedNextBtn.value = true
     }
 }

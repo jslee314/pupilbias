@@ -1,7 +1,6 @@
 package com.jslee.pupilbias.pupilSeg
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
@@ -18,9 +17,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.jslee.pupilbias.MyApplication
 import com.jslee.pupilbias.R
+import com.jslee.pupilbias.data.constant.ViewStatus
 import com.jslee.pupilbias.data.vo.IrisImage
 import com.jslee.pupilbias.databinding.FragmentPupilSegBinding
-import com.jslee.pupilbias.images.ImagesFragmentDirections
 import org.opencv.core.Point
 import tensorflowlite.data.ModelExecutionResultVO
 import tensorflowlite.model.SegmentationModelExecutor
@@ -38,10 +37,7 @@ class PupilSegFragment: Fragment() {
     private val args: PupilSegFragmentArgs by navArgs()
     private val autoSetPupilAndIris = AutoSetPupilAndIris()
     lateinit var resizedBitmap:Bitmap
-
-    lateinit var irisImgInfo: IrisImage
     private lateinit var mContext: Context
-    private var pupilSegmentationModel: SegmentationModelExecutor? = null
 
     override fun onAttach(context: Context) {
         mContext = context
@@ -74,68 +70,30 @@ class PupilSegFragment: Fragment() {
     }
 
     private fun setUpView(){
-        val irisImgInfo = viewModel.irisImage.value!!
-        val bitmapDrawable = irisImgInfo.imgSrcUrl as BitmapDrawable
-        // 동공, 홍채의 인공지능 Segmentation 결과 가져오기
-        pupilSegmentationModel = SegmentationModelExecutor(mContext, SegmentationModelExecutor.PUPIL_MODEL, false)
+        val bitmapDrawable = viewModel.irisImage.value!!.imgSrcUrl as BitmapDrawable
 
+        // 동공, 홍채의 인공지능 Segmentation 결과 가져오기
+        var pupilSegmentationModel = SegmentationModelExecutor(mContext, SegmentationModelExecutor.PUPIL_MODEL, false)
         val pupilExecutionResultVO: ModelExecutionResultVO = pupilSegmentationModel!!.execute(bitmapDrawable.bitmap, SegmentationModelExecutor.PUPIL_MODEL)
 
         if (pupilSegmentationModel != null) {
             pupilSegmentationModel!!.close()
-            pupilSegmentationModel = null
         }
 
-        resizedBitmap = Bitmap.createScaledBitmap(pupilExecutionResultVO.bitmapMaskOnly, irisImgInfo.imgWidth, irisImgInfo.imgHeight, true)
+        resizedBitmap = Bitmap.createScaledBitmap(pupilExecutionResultVO.bitmapMaskOnly, viewModel.irisImage.value!!.imgWidth, viewModel.irisImage.value!!.imgHeight, true)
 
         val maskDrawable = BitmapDrawable(this.resources, resizedBitmap)
-        irisImgInfo.bitmapMaskOnly = maskDrawable
-        irisImgInfo.segmentationLog = pupilExecutionResultVO.executionLog
-
-        // [STEP 1]: 동공마스크의 무게중심 구하기
-        val centroid: Point = autoSetPupilAndIris.getPupilCenter(resizedBitmap)!!
-        irisImgInfo.pupilCenterX = centroid.x.toInt()
-        irisImgInfo.pupilCenterY = centroid.y.toInt()
-        Log.d("jjslee", "pupilCenterX : " + centroid.x.toInt() + ",  pupilCenterY : " + centroid.y.toInt())
-
-        // [STEP 2]: 동공마스크의 예측원 반지름 구하기
-        irisImgInfo.pupilRadius = autoSetPupilAndIris.getRadius(irisImgInfo, resizedBitmap)
-        Log.d("jjslee", "pupilRadius : " + irisImgInfo.pupilRadius)
+        viewModel.irisImage.value!!.bitmapMaskOnly = maskDrawable
+        viewModel.irisImage.value!!.segmentationLog = pupilExecutionResultVO.executionLog
 
     }
 
     private fun setUpObserver() {
 
         viewModel.isClickedSegPupilBtn.observe(viewLifecycleOwner, Observer {
-            if ( it ) {
-                irisImgInfo = viewModel.irisImage.value!!
-                val bitmapDrawable = irisImgInfo.imgSrcUrl as BitmapDrawable
-
-                // 동공, 홍채의 인공지능 Segmentation 결과 가져오기
-                pupilSegmentationModel = SegmentationModelExecutor(mContext, SegmentationModelExecutor.PUPIL_MODEL, false)
-
-                val pupilExecutionResultVO: ModelExecutionResultVO = pupilSegmentationModel!!.execute(bitmapDrawable.bitmap, SegmentationModelExecutor.PUPIL_MODEL)
-
-                if (pupilSegmentationModel != null) {
-                    pupilSegmentationModel!!.close()
-                    pupilSegmentationModel = null
-                }
-
-                var resizedBitmap = Bitmap.createScaledBitmap(pupilExecutionResultVO.bitmapMaskOnly, irisImgInfo.imgWidth, irisImgInfo.imgHeight, true)
-
-                val maskDrawable = BitmapDrawable(this.resources, resizedBitmap)
-                irisImgInfo.bitmapMaskOnly = maskDrawable
-                irisImgInfo.segmentationLog = pupilExecutionResultVO.executionLog
-
-            }
-        })
-
-        viewModel.isClickedNextBtn.observe(viewLifecycleOwner, Observer {
             if ( it == true ) {
-                this.findNavController().navigate(
-                    PupilSegFragmentDirections.actionPupilSegFragmentToPupilBiasAnalFragment()
-                )
-                //viewModel.displayPropertyDetailsComplete()
+                viewModel.irisImage.value!!.viewSeg = ViewStatus.VISIBLE
+                Log.d("jjslee", "viewModel.irisImage.value!!.viewSeg  :  " + viewModel.irisImage.value!!.viewSeg)
             }
         })
 
@@ -144,25 +102,28 @@ class PupilSegFragment: Fragment() {
                 // [STEP 1]: 동공마스크의 무게중심 구하기
                 val autoSetPupilAndIris = AutoSetPupilAndIris()
                 val centroid: Point = autoSetPupilAndIris.getPupilCenter(resizedBitmap)!!
-                irisImgInfo.pupilCenterX = centroid.x.toInt()
-                irisImgInfo.pupilCenterY = centroid.y.toInt()
+                viewModel.irisImage.value!!.pupilCenterX = centroid.x.toInt()
+                viewModel.irisImage.value!!.pupilCenterY = centroid.y.toInt()
                 Log.d("jjslee", "pupilCenterX : " + centroid.x.toInt() + ",  pupilCenterY : " + centroid.y.toInt())
-
-
             }
         })
 
         viewModel.isClickedCircleBtn.observe(viewLifecycleOwner, Observer {
-            if ( null != it ) {
-
-
+            if ( it == true ) {
 
                 // [STEP 2]: 동공마스크의 예측원 반지름 구하기
-                irisImgInfo.pupilRadius = autoSetPupilAndIris.getRadius(irisImgInfo, resizedBitmap)
-                Log.d("jjslee", "pupilRadius : " + irisImgInfo.pupilRadius)
+                viewModel.irisImage.value!!.pupilRadius = autoSetPupilAndIris.getRadius(viewModel.irisImage.value!!, resizedBitmap)
+                Log.d("jjslee", "pupilRadius : " + viewModel.irisImage.value!!.pupilRadius)
             }
         })
 
+        viewModel.isClickedNextBtn.observe(viewLifecycleOwner, Observer {
+            if ( it == true ) {
+                this.findNavController().navigate(
+                    PupilSegFragmentDirections.actionPupilSegFragmentToPupilBiasAnalFragment()
+                )
+            }
+        })
 
 
     }

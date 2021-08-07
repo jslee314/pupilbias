@@ -39,7 +39,7 @@ class AutoSetPupilAndIris {
 
         // step2: 영역이 가장 큰 contour 찾기
         val maxValIdx = findLargestContour(contours)
-        largestContour = contours.get(maxValIdx)
+        largestContour = contours[maxValIdx]
 
         // step3: contour의 1차 모멘트 구하기기
         val moments: Moments = Imgproc.moments(largestContour)

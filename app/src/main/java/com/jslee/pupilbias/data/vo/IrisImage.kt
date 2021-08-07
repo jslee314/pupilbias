@@ -10,7 +10,8 @@ import kotlinx.android.parcel.RawValue
 data class IrisImage (
     val id: Int?,
     val fileName: String?,
-    val imgSrcUrl: @RawValue Drawable?
+    val imgSrcUrl: @RawValue Drawable?,
+    var viewSeg: ViewStatus = ViewStatus.VISIBLE
 
 ) : Parcelable {
 
@@ -25,12 +26,4 @@ data class IrisImage (
 
     var pupilRadius:Int = 0
 
-    var viewSeg: ViewStatus = ViewStatus.GONE
-        get() {
-            return if(bitmapMaskOnly == null){
-                ViewStatus.GONE
-            }else {
-                ViewStatus.VISIBLE
-            }
-        }
 }
