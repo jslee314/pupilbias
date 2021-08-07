@@ -180,6 +180,7 @@ class SegmentationModelExecutor(context: Context, mode: Int, private var useGPU:
     private fun formatExecutionLog(): String {
         val sb = StringBuilder()
         sb.append("Input Image Size: ${IMAGE_WIDTH}x $IMAGE_HEIGHT\n")
+        sb.append("Output Mask Size: ${MASK_WIDTH}x $MASK_HEIGHT\n")
         sb.append("GPU enabled: $useGPU\n")
         sb.append("Number of threads: $numberThreads\n")
         sb.append("Pre-process execution time: $preprocessTime ms\n")

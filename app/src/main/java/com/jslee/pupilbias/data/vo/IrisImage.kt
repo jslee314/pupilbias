@@ -2,6 +2,7 @@ package com.jslee.pupilbias.data.vo
 
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
+import com.jslee.pupilbias.data.constant.ViewStatus
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.RawValue
 
@@ -13,8 +14,8 @@ data class IrisImage (
 
 ) : Parcelable {
 
-    lateinit var bitmapMaskOnly: Drawable
-    lateinit var  segmentationLog: String
+    var bitmapMaskOnly: Drawable? = null
+    var segmentationLog: String = " "
 
     var imgWidth: Int = 640
     var imgHeight:Int = 480
@@ -24,4 +25,12 @@ data class IrisImage (
 
     var pupilRadius:Int = 0
 
+    var viewSeg: ViewStatus = ViewStatus.GONE
+        get() {
+            return if(bitmapMaskOnly == null){
+                ViewStatus.GONE
+            }else {
+                ViewStatus.VISIBLE
+            }
+        }
 }

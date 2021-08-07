@@ -10,24 +10,26 @@ import org.opencv.imgproc.Imgproc
 import org.opencv.imgproc.Moments
 import org.opencv.utils.Converters
 import java.util.*
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
 
 class AutoSetPupilAndIris {
     lateinit var largestContour: MatOfPoint
     lateinit var contours: List<MatOfPoint>
     lateinit var resizedBitmap: Bitmap
     lateinit var contourPointList: List<Point>
-    var contourMat: org.opencv.core.Mat = Mat()
-    var grayMat:org.opencv.core.Mat = Mat()
+    var contourMat: Mat = Mat()
+    var grayMat: Mat = Mat()
 
     /**
      * pupil 의 중심 구하기
      * -> 2차원 분포의 1차 모멘트값 산정하기 (분포의 무게중심)
      * -> 산정된 값을 예측원의 중심 으로 함
      * */
-    fun getPupilCenter(grayMaskBitmap: Bitmap?, maskWidth: Int, maskHeight: Int): Point? {
+    fun getPupilCenter(resizedBitmap: Bitmap?): Point? {
 
         // step 0: 이미지 resize
-        var resizedBitmap = Bitmap.createScaledBitmap(grayMaskBitmap!!, maskWidth, maskHeight, true)
+//        var resizedBitmap = Bitmap.createScaledBitmap(grayMaskBitmap!!, maskWidth, maskHeight, true)
         Utils.bitmapToMat(resizedBitmap, grayMat)
         Imgproc.cvtColor(grayMat, grayMat, Imgproc.COLOR_RGB2GRAY)
 
@@ -42,8 +44,8 @@ class AutoSetPupilAndIris {
         // step3: contour의 1차 모멘트 구하기기
         val moments: Moments = Imgproc.moments(largestContour)
         val centroid = Point()
-        centroid.x = (moments.get_m10() / moments.get_m00()).toInt().toDouble()
-        centroid.y = (moments.get_m01() / moments.get_m00()).toInt().toDouble()
+        centroid.x = (moments._m10 / moments._m00).toInt().toDouble()
+        centroid.y = (moments._m01 / moments._m00).toInt().toDouble()
         return centroid
     }
 
@@ -66,10 +68,10 @@ class AutoSetPupilAndIris {
      * @내용 : 예측원의 반지름 구하기
      * 도형의 contour의 좌표들과 도심간의 거리의 평균
      */
-    fun getRadius(irisImg: IrisImage, grayMaskBitmap: Bitmap?, maskWidth: Int, maskHeight: Int): Int {
+    fun getRadius(irisImg: IrisImage, resizedBitmap: Bitmap?): Int {
 
         // step 0: 이미지 resize
-        resizedBitmap = Bitmap.createScaledBitmap(grayMaskBitmap!!, maskWidth, maskHeight, true)
+//        resizedBitmap = Bitmap.createScaledBitmap(grayMaskBitmap!!, maskWidth, maskHeight, true)
         grayMat = Mat()
         Utils.bitmapToMat(resizedBitmap, grayMat)
         Imgproc.cvtColor(grayMat, grayMat, Imgproc.COLOR_RGB2GRAY)
@@ -90,11 +92,11 @@ class AutoSetPupilAndIris {
         val cX: Int = irisImg.pupilCenterX
         val cY: Int = irisImg.pupilCenterY
         for (i in contourPointList.indices) {
-            val x: Double = contourPointList.get(i).x
-            val y: Double = contourPointList.get(i).y
-            sumRadius = (sumRadius + Math.sqrt(((x - cX) * (x - cX) + (y - cY) * (y - cY)).toDouble())).toInt()
+            val x: Double = contourPointList[i].x
+            val y: Double = contourPointList[i].y
+            sumRadius = (sumRadius + sqrt(((x - cX) * (x - cX) + (y - cY) * (y - cY)))).toInt()
         }
-        return Math.round(sumRadius.toFloat() / contourPointList.size).toInt()
+        return (sumRadius.toFloat() / contourPointList.size).roundToInt()
     }
 
 }

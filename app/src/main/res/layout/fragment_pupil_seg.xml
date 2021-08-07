@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.jslee.pupilbias.pupilSeg.PupilSegViewModel" />
@@ -14,92 +15,126 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/orig_img_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="원본 영상"
-            app:layout_constraintBottom_toTopOf="@+id/orig_img_iw"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/orig_img_iw"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            app:BA_imageUrl = "@{viewModel.irisImage.imgSrcUrl}"
-            app:layout_constraintBottom_toTopOf="@+id/anal_img_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/orig_img_title"
-            tools:srcCompat="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/anal_img_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="동공 분할 영상"
-            app:layout_constraintBottom_toTopOf="@+id/anal_img_iw"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/orig_img_iw" />
-
-        <ImageView
-            android:id="@+id/anal_img_iw"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            app:BA_imageUrl = "@{viewModel.irisImage.bitmapMaskOnly}"
-            app:layout_constraintBottom_toTopOf="@+id/anal_img_tv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/anal_img_title"
-            tools:srcCompat="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/anal_img_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text= "@{viewModel.irisImage.segmentationLog}"
-
-            app:layout_constraintBottom_toTopOf="@+id/center_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/anal_img_iw"
-            tools:text="인공지능 분석 결과 보기~~~~~~~"/>
-
-        <Button
-            android:id="@+id/center_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="무게중심(blue)"
-            style="?attr/materialButtonOutlinedStyle"
-            app:layout_constraintBottom_toTopOf="@+id/next_btn"
-            app:layout_constraintEnd_toStartOf="@+id/circle_btn"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/anal_img_tv" />
-
-        <Button
-            android:id="@+id/circle_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="예측원(red)"
-            style="?attr/materialButtonStyle"
-            app:layout_constraintBottom_toBottomOf="@+id/center_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/center_btn"
-            app:layout_constraintTop_toTopOf="@+id/center_btn" />
-
-        <Button
-            android:id="@+id/next_btn"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/result_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="동공분석 시작하기"
-            android:onClick="@{() -> viewModel.onClickedNextBtn()}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:overScrollMode="never"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/center_btn" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/scroll_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
+
+                <TextView
+                    android:id="@+id/orig_img_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="원본 영상"
+                    app:layout_constraintBottom_toTopOf="@+id/orig_img_iw"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/orig_img_iw"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    app:BA_imageUrl = "@{viewModel.irisImage.imgSrcUrl}"
+                    app:layout_constraintBottom_toTopOf="@+id/anal_img_btn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/orig_img_title"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <Button
+                    android:id="@+id/anal_img_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="동공 분할하기"
+                    android:onClick="@{() -> viewModel.onClickedSegPupilBtn()}"
+                    app:layout_constraintBottom_toTopOf="@+id/anal_img_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/orig_img_iw" />
+
+                <TextView
+                    android:id="@+id/anal_img_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="동공 분할 영상"
+                    app:layout_constraintBottom_toTopOf="@+id/anal_img_iw"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/anal_img_btn" />
+
+                <ImageView
+                    android:id="@+id/anal_img_iw"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    app:BA_imageUrl = "@{viewModel.irisImage.bitmapMaskOnly}"
+                    app:layout_constraintBottom_toTopOf="@+id/anal_img_tv"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/anal_img_btn"
+                    tools:srcCompat="@tools:sample/avatars"
+                    app:BA_img_status = "@{viewModel.irisImage.viewSeg}"/>
+
+                <TextView
+                    android:id="@+id/anal_img_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text= "@{viewModel.irisImage.segmentationLog}"
+                    app:layout_constraintBottom_toTopOf="@+id/center_btn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/anal_img_iw"
+                    tools:text="인공지능 분석 결과 보기~~~~~~~"
+                    app:BA_text_status = "@{viewModel.irisImage.viewSeg}" />
+
+                <Button
+                    android:id="@+id/center_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="무게중심(blue)"
+                    android:onClick="@{() -> viewModel.onClickedCenterBtn()}"
+                    style="?attr/materialButtonOutlinedStyle"
+                    app:layout_constraintBottom_toTopOf="@+id/next_btn"
+                    app:layout_constraintEnd_toStartOf="@+id/circle_btn"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/anal_img_tv" />
+
+                <Button
+                    android:id="@+id/circle_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="예측원(red)"
+                    android:onClick="@{() -> viewModel.onClickedCircleBtn()}"
+                    style="?attr/materialButtonStyle"
+                    app:layout_constraintBottom_toBottomOf="@+id/center_btn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/center_btn"
+                    app:layout_constraintTop_toTopOf="@+id/center_btn" />
+
+                <Button
+                    android:id="@+id/next_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="동공분석 시작하기"
+                    android:onClick="@{() -> viewModel.onClickedNextBtn()}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/center_btn" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

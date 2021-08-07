@@ -1,14 +1,17 @@
 package com.jslee.pupilbias.util
 
 import android.graphics.drawable.Drawable
+import android.view.View
 import android.widget.ImageView
-import androidx.core.net.toUri
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.jslee.pupilbias.R
+import com.jslee.pupilbias.data.constant.ViewStatus
 import com.jslee.pupilbias.data.vo.IrisImage
 import com.jslee.pupilbias.images.PhotoGridAdapter
 
@@ -39,4 +42,48 @@ fun bindImage(imgView: ImageView, drawable: Drawable) {
 fun bindRecyclerView(recyclerView: RecyclerView, data: MutableList<IrisImage>?) {
     val adapter = recyclerView.adapter as PhotoGridAdapter
     adapter.submitList(data)
+}
+
+
+@BindingAdapter("BA_layout_status")
+fun bindStatusLayout(layout: ConstraintLayout, status: ViewStatus) {
+    when (status) {
+        ViewStatus.VISIBLE -> {
+            layout.visibility = View.VISIBLE
+            // imageView.setImageResource(R.drawable.loading_animation)
+        }
+        ViewStatus.GONE -> {
+            layout.visibility = View.GONE
+        }
+
+    }
+}
+
+@BindingAdapter("BA_text_status")
+fun bindStatusText(textView: TextView, status: ViewStatus) {
+    when (status) {
+        ViewStatus.VISIBLE -> {
+            textView.visibility = View.VISIBLE
+            // textView.setText(R.string.activity_version_update_require_install_txt)
+        }
+        ViewStatus.GONE -> {
+            textView.visibility = View.GONE
+        }
+    }
+}
+
+
+@BindingAdapter("BA_img_status")
+fun bindStatusImage(imageView: ImageView, status: ViewStatus) {
+    when (status) {
+
+        ViewStatus.VISIBLE -> {
+            imageView.visibility = View.VISIBLE
+            // imageView.setImageResource(R.drawable.loading_animation)
+        }
+        ViewStatus.GONE -> {
+            imageView.visibility = View.GONE
+        }
+
+    }
 }
