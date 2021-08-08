@@ -2,7 +2,6 @@ package com.jslee.pupilbias.pupilSeg
 
 import android.R.attr.*
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import com.jslee.pupilbias.data.vo.IrisImage
 import org.opencv.android.Utils
 import org.opencv.core.*
@@ -99,17 +98,17 @@ class AutoSetPupilAndIris {
         return (sumRadius.toFloat() / contourPointList.size).roundToInt()
     }
 
-    fun drawCircle(point: Point, resizedBitmap: Bitmap, radius:Int): Bitmap {
-        var grayMat: Mat = Mat()
-        Utils.bitmapToMat(resizedBitmap, grayMat)
-        Imgproc.cvtColor(grayMat, grayMat, Imgproc.COLOR_RGB2GRAY)
+    fun drawCircle(point: Point, resizedBitmap: Bitmap, radius:Int, scalar: Scalar): Bitmap {
+        var colorMat: Mat = Mat()
+        Utils.bitmapToMat(resizedBitmap, colorMat) // Android Bitmap are RGB But in opencv Mat, the channels are BGR by default.
+//        Imgproc.cvtColor(colorMat, colorMat, Imgproc.COLOR_RGB2GRAY)
+        Imgproc.cvtColor(colorMat, colorMat, Imgproc.COLOR_BGR2RGB);
 
-        Imgproc.circle(
-            grayMat, point, radius,
-            Scalar(0.0, 255.0, 0.0, 150.0),
-            4)
+        // (Mat img, Point center, int radius, Scalar color, int thickness)
 
-        Utils.matToBitmap(grayMat, resizedBitmap)
+        Imgproc.circle(colorMat, point, radius, scalar, 2)
+
+        Utils.matToBitmap(colorMat, resizedBitmap)
 
         return resizedBitmap
 

@@ -12,7 +12,7 @@ data class IrisImage (
     val id: Int?,
     val fileName: String?,
     val imgDrawableInt: @RawValue Drawable? = null,
-    var viewSeg: ViewStatus = ViewStatus.VISIBLE
+    var viewSeg: ViewStatus = ViewStatus.GONE
 
 ) : Parcelable {
 

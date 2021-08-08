@@ -34,7 +34,6 @@ fun bindImage(imgView: ImageView, drawable: Drawable) {
     }
 }
 
-
 /** [GroundProperty] 데이터가없는 경우 (데이터가 null) [RecyclerView]를 숨기고
  * 그렇지 않으면 표시 하는 기능
  */
@@ -45,45 +44,16 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: MutableList<IrisImage>?) 
 }
 
 
-@BindingAdapter("BA_layout_status")
-fun bindStatusLayout(layout: ConstraintLayout, status: ViewStatus) {
+@BindingAdapter("BA_status")
+fun bindStatus(view: View, status: ViewStatus) {
     when (status) {
         ViewStatus.VISIBLE -> {
-            layout.visibility = View.VISIBLE
-            // imageView.setImageResource(R.drawable.loading_animation)
-        }
-        ViewStatus.GONE -> {
-            layout.visibility = View.GONE
-        }
-
-    }
-}
-
-@BindingAdapter("BA_text_status")
-fun bindStatusText(textView: TextView, status: ViewStatus) {
-    when (status) {
-        ViewStatus.VISIBLE -> {
-            textView.visibility = View.VISIBLE
+            view.visibility = View.VISIBLE
             // textView.setText(R.string.activity_version_update_require_install_txt)
         }
         ViewStatus.GONE -> {
-            textView.visibility = View.GONE
+            view.visibility = View.GONE
         }
     }
-}
 
-
-@BindingAdapter("BA_img_status")
-fun bindStatusImage(imageView: ImageView, status: ViewStatus) {
-    when (status) {
-
-        ViewStatus.VISIBLE -> {
-            imageView.visibility = View.VISIBLE
-            // imageView.setImageResource(R.drawable.loading_animation)
-        }
-        ViewStatus.GONE -> {
-            imageView.visibility = View.GONE
-        }
-
-    }
 }

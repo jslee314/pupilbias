@@ -5,6 +5,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.jslee.pupilbias.data.AppRepository
 import com.jslee.pupilbias.data.vo.IrisImage
@@ -61,8 +62,12 @@ class PupilSegViewModel @Inject constructor(
         _isClickedCircleBtn.value = true
     }
 
-
     fun onClickedNextBtn(){
         _isClickedNextBtn.value = true
+    }
+
+    fun updateIrisImage(irisImage: IrisImage) {
+        // LiveData 객체인 _irisImage 값을 변경해주어야 UI에 자동으로 변경된 값이 적용됨
+        _irisImage.value = irisImage
     }
 }

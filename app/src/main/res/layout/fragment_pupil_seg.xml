@@ -72,7 +72,8 @@
                     app:layout_constraintBottom_toTopOf="@+id/anal_img_iw"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/anal_img_btn" />
+                    app:layout_constraintTop_toBottomOf="@+id/anal_img_btn"
+                    app:BA_status = "@{viewModel.irisImage.viewSeg}"/>
 
                 <ImageView
                     android:id="@+id/anal_img_iw"
@@ -83,7 +84,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/anal_img_btn"
-                    tools:srcCompat="@tools:sample/avatars" />
+                    tools:srcCompat="@tools:sample/avatars"
+                    app:BA_status = "@{viewModel.irisImage.viewSeg}"
+                    />
 
                 <TextView
                     android:id="@+id/anal_img_tv"
@@ -94,7 +97,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/anal_img_iw"
-                    tools:text="인공지능 분석 결과 보기~~~~~~~" />
+                    tools:text="인공지능 분석 결과 보기~~~~~~~"
+                    app:BA_status = "@{viewModel.irisImage.viewSeg}"/>
 
                 <Button
                     android:id="@+id/center_btn"
@@ -106,7 +110,8 @@
                     app:layout_constraintBottom_toTopOf="@+id/next_btn"
                     app:layout_constraintEnd_toStartOf="@+id/circle_btn"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/anal_img_tv" />
+                    app:layout_constraintTop_toBottomOf="@+id/anal_img_tv"
+                    app:BA_status = "@{viewModel.irisImage.viewSeg}"/>
 
                 <Button
                     android:id="@+id/circle_btn"
@@ -118,7 +123,8 @@
                     app:layout_constraintBottom_toBottomOf="@+id/center_btn"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/center_btn"
-                    app:layout_constraintTop_toTopOf="@+id/center_btn" />
+                    app:layout_constraintTop_toTopOf="@+id/center_btn"
+                    app:BA_status = "@{viewModel.irisImage.viewSeg}"/>
 
                 <Button
                     android:id="@+id/next_btn"
@@ -129,7 +135,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/center_btn" />
+                    app:layout_constraintTop_toBottomOf="@+id/center_btn"
+                    app:BA_status = "@{viewModel.irisImage.viewSeg}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
