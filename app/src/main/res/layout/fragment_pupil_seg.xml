@@ -46,7 +46,7 @@
                     android:id="@+id/orig_img_iw"
                     android:layout_width="300dp"
                     android:layout_height="300dp"
-                    app:BA_imageUrl = "@{viewModel.irisImage.imgSrcUrl}"
+                    app:BA_imageUrl = "@{viewModel.irisImage.imgDrawableInt}"
                     app:layout_constraintBottom_toTopOf="@+id/anal_img_btn"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

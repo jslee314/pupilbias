@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.jslee.pupilbias.data.AppRepository
 import com.jslee.pupilbias.data.vo.IrisImage
-import org.opencv.core.Point
 import tensorflowlite.data.ModelExecutionResultVO
 import tensorflowlite.model.SegmentationModelExecutor
 import javax.inject.Inject

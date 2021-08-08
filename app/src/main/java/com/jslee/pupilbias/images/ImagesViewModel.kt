@@ -1,7 +1,6 @@
 package com.jslee.pupilbias.images
 
 import android.content.res.AssetManager
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -39,7 +38,7 @@ class ImagesViewModel @Inject constructor(
             for(i in files!!.indices) {
                 inputStream = assetManager.open("iris/" + files[i])
                 val drawable: Drawable = Drawable.createFromStream(inputStream, null)
-                val irisImg: IrisImage = IrisImage(id = i ,fileName = files[i],  imgSrcUrl = drawable)
+                val irisImg: IrisImage = IrisImage(id = i ,fileName = files[i],  imgDrawableInt = drawable)
                 _irisImages.value?.add(irisImg)
             }
         } catch (e: IOException) {

@@ -22,7 +22,7 @@
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             android:padding="2dp"
-            app:BA_imageUrl="@{irisImage.imgSrcUrl}"
+            app:BA_imageUrl="@{irisImage.imgDrawableInt}"
             tools:src="@tools:sample/backgrounds/scenic"/>
     </FrameLayout>
 </layout>
