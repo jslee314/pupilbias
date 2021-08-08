@@ -1,6 +1,7 @@
 package com.jslee.pupilbias.pupilSeg
 
-import android.R.attr.*
+import android.R.attr.x
+import android.R.attr.y
 import android.graphics.Bitmap
 import com.jslee.pupilbias.data.vo.IrisImage
 import org.opencv.android.Utils
@@ -101,15 +102,22 @@ class AutoSetPupilAndIris {
     fun drawCircle(point: Point, resizedBitmap: Bitmap, radius:Int, scalar: Scalar): Bitmap {
         var colorMat: Mat = Mat()
         Utils.bitmapToMat(resizedBitmap, colorMat) // Android Bitmap are RGB But in opencv Mat, the channels are BGR by default.
-//        Imgproc.cvtColor(colorMat, colorMat, Imgproc.COLOR_RGB2GRAY)
-        Imgproc.cvtColor(colorMat, colorMat, Imgproc.COLOR_BGR2RGB);
-
-        // (Mat img, Point center, int radius, Scalar color, int thickness)
+        Imgproc.cvtColor(colorMat, colorMat, Imgproc.COLOR_BGR2RGB)
 
         Imgproc.circle(colorMat, point, radius, scalar, 2)
 
         Utils.matToBitmap(colorMat, resizedBitmap)
+        return resizedBitmap
+    }
 
+    fun drawArc(point: Point, resizedBitmap: Bitmap, radius:Int, scalar: Scalar, startAngle: Double, endAngle:Double): Bitmap {
+        var colorMat: Mat = Mat()
+        Utils.bitmapToMat(resizedBitmap, colorMat) // Android Bitmap are RGB But in opencv Mat, the channels are BGR by default.
+        Imgproc.cvtColor(colorMat, colorMat, Imgproc.COLOR_BGR2RGB)
+
+        Imgproc.ellipse(colorMat, point, Size(radius.toDouble(), radius.toDouble()), 0.0,0.0, 90.0, scalar, -1)
+
+        Utils.matToBitmap(colorMat, resizedBitmap)
         return resizedBitmap
 
     }
