@@ -38,7 +38,6 @@ class PupilSegViewModel @Inject constructor(
     val isClickedCircleBtn: LiveData<Boolean>
         get() = _isClickedCircleBtn
 
-
     fun start (irisImage: IrisImage){
         _irisImage.value = irisImage
 
