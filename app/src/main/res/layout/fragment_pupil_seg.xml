@@ -59,6 +59,7 @@
                     android:layout_height="wrap_content"
                     android:onClick="@{() -> viewModel.onClickedSegPupilBtn()}"
                     android:text="동공 분할하기"
+                    app:BA_opposition_status="@{viewModel.irisImage.viewSeg}"
                     app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
                     app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
                     app:layout_constraintTop_toBottomOf="@+id/orig_img_iw" />
@@ -83,7 +84,7 @@
                     app:layout_constraintDimensionRatio="h, 4:3"
                     app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
                     app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
-                    app:layout_constraintTop_toBottomOf="@+id/anal_img_btn"
+                    app:layout_constraintTop_toBottomOf="@+id/anal_img_title"
                     tools:srcCompat="@tools:sample/avatars" />
 
                 <TextView
@@ -99,33 +100,58 @@
                     tools:text="인공지능 분석 결과 보기~~~~~~~" />
 
                 <Button
-                    android:id="@+id/center_btn"
+                    android:id="@+id/mask_center_btn"
                     style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:onClick="@{() -> viewModel.onClickedCenterBtn()}"
-                    android:text="무게중심(blue)"
+                    android:text="무게중심(원본 이미지)"
+                    app:BA_status="@{viewModel.irisImage.viewSeg}"
+                    app:layout_constraintEnd_toStartOf="@+id/mask_circle_btn"
+                    app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/anal_img_tv" />
+
+                <Button
+                    android:id="@+id/mask_circle_btn"
+                    style="?attr/materialButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> viewModel.onClickedCircleBtn()}"
+                    android:text="예측원(원본 이미지)"
+                    app:BA_status="@{viewModel.irisImage.viewSeg}"
+                    app:layout_constraintBottom_toBottomOf="@+id/mask_center_btn"
+                    app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
+                    app:layout_constraintStart_toEndOf="@+id/mask_center_btn"
+                    app:layout_constraintTop_toTopOf="@+id/mask_center_btn" />
+
+                <Button
+                    android:id="@+id/center_btn"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> viewModel.onClickedMaskCenterBtn()}"
+                    android:text="무게중심(동공 분할 이미지)"
                     app:BA_status="@{viewModel.irisImage.viewSeg}"
                     app:layout_constraintEnd_toStartOf="@+id/circle_btn"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/anal_img_tv" />
+                    app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/mask_center_btn" />
 
                 <Button
                     android:id="@+id/circle_btn"
                     style="?attr/materialButtonStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:onClick="@{() -> viewModel.onClickedCircleBtn()}"
-                    android:text="예측원(red)"
+                    android:onClick="@{() -> viewModel.onClickedMaskCircleBtn()}"
+                    android:text="예측원(동공 분할 이미지)"
                     app:BA_status="@{viewModel.irisImage.viewSeg}"
                     app:layout_constraintBottom_toBottomOf="@+id/center_btn"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
                     app:layout_constraintStart_toEndOf="@+id/center_btn"
                     app:layout_constraintTop_toTopOf="@+id/center_btn" />
 
                 <Button
                     android:id="@+id/next_btn"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:onClick="@{() -> viewModel.onClickedNextBtn()}"
                     android:text="동공 편향 분석 시작하기"

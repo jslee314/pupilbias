@@ -121,4 +121,8 @@ dependencies {
     implementation 'org.tensorflow:tensorflow-lite-support:0.1.0'
     implementation project(":opencv")
 
+    // for image zoom in/out
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
+
 }

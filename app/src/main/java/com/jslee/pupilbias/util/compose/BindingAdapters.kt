@@ -55,5 +55,16 @@ fun bindStatus(view: View, status: ViewStatus) {
             view.visibility = View.GONE
         }
     }
-
+}
+@BindingAdapter("BA_opposition_status")
+fun bindOppositionStatus(view: View, status: ViewStatus) {
+    when (status) {
+        ViewStatus.VISIBLE -> {
+            view.visibility = View.GONE
+            // textView.setText(R.string.activity_version_update_require_install_txt)
+        }
+        ViewStatus.GONE -> {
+            view.visibility = View.VISIBLE
+        }
+    }
 }

@@ -17,6 +17,7 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url "https://jitpack.io" } // Easy to use package repository for Git
         google()
         jcenter() // Warning: this repository is going to shut down soon
     }

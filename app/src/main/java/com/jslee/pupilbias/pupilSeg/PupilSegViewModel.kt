@@ -1,16 +1,10 @@
 package com.jslee.pupilbias.pupilSeg
 
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.jslee.pupilbias.data.AppRepository
 import com.jslee.pupilbias.data.vo.IrisImage
-import tensorflowlite.data.ModelExecutionResultVO
-import tensorflowlite.model.SegmentationModelExecutor
 import javax.inject.Inject
 
 class PupilSegViewModel @Inject constructor(
@@ -22,13 +16,13 @@ class PupilSegViewModel @Inject constructor(
         get() = _irisImage
 
     /** 다음 버튼 클릭 여부*/
+    private val _isClickedNextBtn = MutableLiveData<IrisImage>()
+    val isClickedNextBtn: LiveData<IrisImage>
+        get() = _isClickedNextBtn
+
     private val _isClickedSegPupilBtn = MutableLiveData<Boolean>()
     val isClickedSegPupilBtn: LiveData<Boolean>
         get() = _isClickedSegPupilBtn
-
-    private val _isClickedNextBtn = MutableLiveData<Boolean>()
-    val isClickedNextBtn: LiveData<Boolean>
-        get() = _isClickedNextBtn
 
     private val _isClickedCenterBtn = MutableLiveData<Boolean>()
     val isClickedCenterBtn: LiveData<Boolean>
@@ -38,13 +32,23 @@ class PupilSegViewModel @Inject constructor(
     val isClickedCircleBtn: LiveData<Boolean>
         get() = _isClickedCircleBtn
 
+    private val _isClickedMaskCenterBtn = MutableLiveData<Boolean>()
+    val isClickedMaskCenterBtn: LiveData<Boolean>
+        get() = _isClickedMaskCenterBtn
+
+    private val _isClickedMaskCircleBtn = MutableLiveData<Boolean>()
+    val isClickedMaskCircleBtn: LiveData<Boolean>
+        get() = _isClickedMaskCircleBtn
+
     fun start (irisImage: IrisImage){
         _irisImage.value = irisImage
 
         _isClickedSegPupilBtn.value = false
-        _isClickedNextBtn.value = false
+        _isClickedNextBtn.value = null
         _isClickedCenterBtn.value = false
         _isClickedCircleBtn.value = false
+        _isClickedMaskCenterBtn.value = false
+        _isClickedMaskCircleBtn.value = false
     }
 
     /**
@@ -61,8 +65,16 @@ class PupilSegViewModel @Inject constructor(
         _isClickedCircleBtn.value = true
     }
 
+    fun onClickedMaskCenterBtn(){
+        _isClickedMaskCenterBtn.value = true
+    }
+
+    fun onClickedMaskCircleBtn(){
+        _isClickedMaskCircleBtn.value = true
+    }
+
     fun onClickedNextBtn(){
-        _isClickedNextBtn.value = true
+        _isClickedNextBtn.value = irisImage.value
     }
 
     fun updateIrisImage(irisImage: IrisImage) {

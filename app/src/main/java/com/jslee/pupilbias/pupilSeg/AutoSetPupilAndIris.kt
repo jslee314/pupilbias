@@ -21,8 +21,7 @@ class AutoSetPupilAndIris {
     /**
      * pupil 의 중심 구하기
      * -> 2차원 분포의 1차 모멘트값 산정하기 (분포의 무게중심)
-     * -> 산정된 값을 예측원의 중심 으로 함
-     * */
+     * -> 산정된 값을 예측원의 중심 으로 함 * */
     fun getPupilCenter(resizedBitmap: Bitmap?): Point {
         var grayMat: Mat = Mat()
 
@@ -66,8 +65,7 @@ class AutoSetPupilAndIris {
      * @작성자 : 이재선
      * @최초작성일 : 2020-09-02 오후 06:42
      * @내용 : 예측원의 반지름 구하기
-     * 도형의 contour의 좌표들과 도심간의 거리의 평균
-     */
+     * 도형의 contour의 좌표들과 도심간의 거리의 평균 */
     fun getRadius(irisImg: IrisImage, pupilMaskBitmap: Bitmap?): Int {
         var grayMat: Mat = Mat()
         // step 0: 이미지 resize
@@ -103,7 +101,8 @@ class AutoSetPupilAndIris {
         Utils.bitmapToMat(pupilMaskBitmap, colorMat) // Android Bitmap are RGB But in opencv Mat, the channels are BGR by default.
         Imgproc.cvtColor(colorMat, colorMat, Imgproc.COLOR_BGR2RGB)
 
-        Imgproc.circle(colorMat, point, radius, scalar, 2)
+        Imgproc.circle(colorMat, point, radius, scalar, 1)
+        Imgproc.cvtColor(colorMat, colorMat, Imgproc.COLOR_RGB2BGR)
 
         val drawBitmap: Bitmap = pupilMaskBitmap.copy(pupilMaskBitmap.config, pupilMaskBitmap.isMutable)
         Utils.matToBitmap(colorMat, drawBitmap)
