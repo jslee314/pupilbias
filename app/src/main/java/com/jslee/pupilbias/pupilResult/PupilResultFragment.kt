@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.jslee.pupilbias.MyApplication
 import com.jslee.pupilbias.R
 import com.jslee.pupilbias.databinding.FragmentPupilResultBinding
@@ -24,6 +25,8 @@ class PupilResultFragment: Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<PupilResultViewModel> { viewModelFactory } // by viewModels()을 사용하여 viewModel 지연생성
+
+    private val args: PupilResultFragmentArgs by navArgs()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -47,6 +50,8 @@ class PupilResultFragment: Fragment() {
     private fun setUpBinding(){
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        viewModel.start(args.selectedImage)
 
     }
 
