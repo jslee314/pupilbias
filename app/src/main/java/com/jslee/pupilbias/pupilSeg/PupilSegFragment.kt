@@ -87,7 +87,6 @@ class PupilSegFragment: Fragment() {
         viewModel.irisImage.value!!.bitmapMaskOnly = maskDrawable
         viewModel.irisImage.value!!.segmentationLog = pupilExecutionResultVO.executionLog
 
-
         // [STEP 1]: 동공마스크의 무게중심 구하기
         val autoSetPupilAndIris = AutoSetPupilAndIris()
         viewModel.irisImage.value!!.pupilCenter = autoSetPupilAndIris.getPupilCenter(resizedBitmap)
@@ -104,7 +103,6 @@ class PupilSegFragment: Fragment() {
         viewModel.isClickedSegPupilBtn.observe(viewLifecycleOwner, Observer {
             if ( it == true ) {
 
-
                 viewModel.irisImage.value!!.viewSeg = ViewStatus.VISIBLE
                 viewModel.updateIrisImage(viewModel.irisImage.value!!)
 
@@ -116,8 +114,7 @@ class PupilSegFragment: Fragment() {
                 // 동공마스크의 예측원 그리기(red)
                 val color = Scalar(255.0, 0.0, 0.0)
                 val maskDrawable = BitmapDrawable(this.resources,
-                    autoSetPupilAndIris.drawCircle(viewModel.irisImage.value!!.pupilCenter, resizedBitmap,
-                        3, color))
+                    autoSetPupilAndIris.drawCircle(viewModel.irisImage.value!!.pupilCenter, resizedBitmap, 3, color))
 
                 viewModel.irisImage.value!!.bitmapMaskOnly = maskDrawable
                 viewModel.updateIrisImage(viewModel.irisImage.value!!)
@@ -130,13 +127,10 @@ class PupilSegFragment: Fragment() {
 
                 // [STEP 2]: 동공마스크의 예측원 그리기(red)
                 val color = Scalar(0.0, 0.0, 255.0)
-
-                val maskDrawable = BitmapDrawable(this.resources, autoSetPupilAndIris.drawCircle(viewModel.irisImage.value!!.pupilCenter, resizedBitmap,
-                    viewModel.irisImage.value!!.pupilRadius, color))
+                val maskDrawable = BitmapDrawable(this.resources, autoSetPupilAndIris.drawCircle(viewModel.irisImage.value!!.pupilCenter, resizedBitmap, viewModel.irisImage.value!!.pupilRadius, color))
 
                 viewModel.irisImage.value!!.bitmapMaskOnly = maskDrawable
                 viewModel.updateIrisImage(viewModel.irisImage.value!!)
-
 
             }
         })
