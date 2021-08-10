@@ -11,57 +11,157 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-
         android:id="@+id/root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.github.chrisbanes.photoview.PhotoView
-            android:id="@+id/orig_img_iw"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:BA_imageUrl="@{viewModel.irisImage.imgDrawableInt}"
-            android:adjustViewBounds="true"
-            app:layout_constraintDimensionRatio="h, 4:3"
-            app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
-            app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="동공 분석 보기"
-            app:layout_constraintBottom_toTopOf="@+id/next_btn"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/next_btn"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/result_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="분석 결과 보기"
-            android:onClick="@{() -> viewModel.onClickedNextBtn()}"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/ver_start_guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.044"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/scroll_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/ver_end_guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.956"/>
+                <TextView
+                    android:id="@+id/orig_img_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="원본 영상"
+                    app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <com.github.chrisbanes.photoview.PhotoView
+                    android:id="@+id/orig_img_iw"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:BA_imageUrl="@{viewModel.irisImage.originalImg}"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintDimensionRatio="h, 4:3"
+                    app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/orig_img_title"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <TextView
+                    android:id="@+id/tv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1. 동공 분석"
+                    app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/orig_img_iw" />
+
+                <com.github.chrisbanes.photoview.PhotoView
+                    android:id="@+id/anal_img_iw_1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:BA_imageBitmap="@{viewModel.radiusAnalBitmap}"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintDimensionRatio="h, 4:3"
+                    app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_1"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <TextView
+                    android:id="@+id/tv_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2. 중심 분석"
+                    app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/anal_img_iw_1" />
+
+                <com.github.chrisbanes.photoview.PhotoView
+                    android:id="@+id/anal_img_iw_2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:BA_imageBitmap="@{viewModel.centerAnalBitmap}"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintDimensionRatio="h, 4:3"
+                    app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_2"
+                    tools:srcCompat="@tools:sample/avatars"/>
+
+                <TextView
+                    android:id="@+id/tv_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3. Four Sector"
+                    app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/anal_img_iw_2" />
+
+                <com.github.chrisbanes.photoview.PhotoView
+                    android:id="@+id/anal_img_iw_3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:BA_imageBitmap="@{viewModel.fourSectorAnalBitmap}"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintDimensionRatio="h, 4:3"
+                    app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_3"
+                    tools:srcCompat="@tools:sample/avatars"/>
+
+                <TextView
+                    android:id="@+id/tv_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4. Twelve Sector"
+                    app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/anal_img_iw_3" />
+
+                <com.github.chrisbanes.photoview.PhotoView
+                    android:id="@+id/anal_img_iw_4"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:BA_imageBitmap="@{viewModel.twelveAnalBitmap}"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintDimensionRatio="h, 4:3"
+                    app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
+                    app:layout_constraintStart_toStartOf="@+id/ver_start_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_4"
+                    tools:srcCompat="@tools:sample/avatars"/>
+
+                <Button
+                    android:id="@+id/next_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="분석 결과 보기"
+                    android:onClick="@{() -> viewModel.onClickedNextBtn()}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/anal_img_iw_4" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/ver_start_guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.044"/>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/ver_end_guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.956"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

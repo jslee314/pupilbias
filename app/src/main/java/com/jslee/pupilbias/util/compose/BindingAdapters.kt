@@ -1,5 +1,6 @@
 package com.jslee.pupilbias.util
 
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.jslee.pupilbias.R
 import com.jslee.pupilbias.data.constant.ViewStatus
 import com.jslee.pupilbias.data.vo.IrisImage
@@ -33,6 +36,29 @@ fun bindImage(imgView: ImageView, drawable: Drawable) {
             .into(imgView)
     }
 }
+
+@BindingAdapter("BA_imageBitmap")
+fun bindBitmapImage(imgView: ImageView, bitmap: Bitmap) {
+
+    // imgUrl이 null 이 아닐경우 수행 >>>>>  let() + ?.
+        Glide.with(imgView.context)
+            .asBitmap()
+            .load(bitmap)
+            .into(object : CustomTarget<Bitmap>(){
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    imgView.setImageBitmap(resource)
+                }
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    // this is called when imageView is cleared on lifecycle call or for some other reason.
+                    // if you are referencing the bitmap somewhere else too other than this imageView
+                    // clear it here as you can no longer have the bitmap
+                }
+            })
+
+}
+
+
+
 
 /** [GroundProperty] 데이터가없는 경우 (데이터가 null) [RecyclerView]를 숨기고
  * 그렇지 않으면 표시 하는 기능

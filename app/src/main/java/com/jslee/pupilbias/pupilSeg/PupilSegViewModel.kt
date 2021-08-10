@@ -1,5 +1,7 @@
 package com.jslee.pupilbias.pupilSeg
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +16,10 @@ class PupilSegViewModel @Inject constructor(
     private val _irisImage = MutableLiveData<IrisImage>()
     val irisImage: LiveData<IrisImage>
         get() = _irisImage
+
+    private val _pupilMaskBitmap = MutableLiveData<Bitmap>()
+    val pupilMaskBitmap: LiveData<Bitmap>
+        get() = _pupilMaskBitmap
 
     /** 다음 버튼 클릭 여부*/
     private val _isClickedNextBtn = MutableLiveData<IrisImage>()
@@ -49,6 +55,7 @@ class PupilSegViewModel @Inject constructor(
         _isClickedCircleBtn.value = false
         _isClickedMaskCenterBtn.value = false
         _isClickedMaskCircleBtn.value = false
+
     }
 
     /**
@@ -75,6 +82,25 @@ class PupilSegViewModel @Inject constructor(
 
     fun onClickedNextBtn(){
         _isClickedNextBtn.value = irisImage.value
+    }
+
+    fun updatePupilMaskBitmap(bitmap: Bitmap) {
+        // LiveData 객체인 _irisImage 값을 변경해주어야 UI에 자동으로 변경된 값이 적용됨
+        _pupilMaskBitmap.value = bitmap
+    }
+
+    fun getAutoSetPupilAndIris() {
+        val autoSetPupilAndIris = AutoSetPupilAndIris()
+
+        // [STEP 0]: 동공마스크의 컨투어 구하기
+        val contourPointList = autoSetPupilAndIris.getLargestContour(_pupilMaskBitmap.value!!)
+        _irisImage.value!!.contourPointList = contourPointList
+
+        // [STEP 1]: 동공마스크의 무게중심 구하기
+        _irisImage.value!!.pupilCenter = autoSetPupilAndIris.getPupilCenter(_pupilMaskBitmap.value!!)
+
+        // [STEP 2]: 동공마스크의 예측원 반지름 구하기
+        _irisImage.value!!.pupilRadius = autoSetPupilAndIris.getRadius(_irisImage.value!!.pupilCenter, contourPointList)
     }
 
     fun updateIrisImage(irisImage: IrisImage) {

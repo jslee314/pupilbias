@@ -47,6 +47,7 @@ class SegmentationModelExecutor(context: Context, mode: Int, private var useGPU:
 //        const val ABSORPTIONRING_MODEL = 3
         const val AUTONERVOUS_MODEL = 4
         const val PUPIL_MODEL = 5
+        const val PUPIL_MODEL_128 = 6
     }
 
     init {
@@ -64,10 +65,24 @@ class SegmentationModelExecutor(context: Context, mode: Int, private var useGPU:
                 NUM_CLASSES = 3
                 imageSegmentationModel = "iris_pupil_v1_model.tflite"
             }
+            PUPIL_MODEL_128 -> {
+                IMAGE_WIDTH = 128
+                IMAGE_HEIGHT = 128
+                MASK_WIDTH = 128
+                MASK_HEIGHT = 128
+                IMAGE_MEAN = 0.0f
+                IMAGE_STD = 255.0f
+                imageSegmentationModel = "pupil_model_v1.tflite"
+            }
         }
-
-        segmentColors[0] = Color.TRANSPARENT
-        segmentColors[1] = Color.BLUE
+        if(mode == PUPIL_MODEL) {
+            segmentColors[0] = Color.TRANSPARENT
+            segmentColors[1] = Color.BLUE
+        }
+        if(mode == PUPIL_MODEL_128) {
+            segmentColors[0] = Color.BLACK
+            segmentColors[1] = Color.WHITE
+        }
 
         interpreter = getInterpreter(context, imageSegmentationModel, useGPU)
         segmentationMasks = ByteBuffer.allocateDirect(1 * MASK_WIDTH * MASK_HEIGHT * NUM_CLASSES * 4)
@@ -103,6 +118,24 @@ class SegmentationModelExecutor(context: Context, mode: Int, private var useGPU:
             maskFlatteningTime = SystemClock.uptimeMillis()
 
             if (mode == PUPIL_MODEL) {
+                val (pupilIrisMask, pupilMask, itemsFound) =
+                    convertBytebufferMaskToBitmap(
+                        segmentationMasks, MASK_WIDTH, MASK_HEIGHT
+                    )
+                maskFlatteningTime = SystemClock.uptimeMillis() - maskFlatteningTime
+                Log.d(TAG, "Time to flatten the mask result $maskFlatteningTime")
+
+                fullTimeExecutionTime = SystemClock.uptimeMillis() - fullTimeExecutionTime
+                Log.d(TAG, "Total time execution $fullTimeExecutionTime")
+
+                return ModelExecutionResultVO(
+                    pupilIrisMask,
+                    scaledBitmap,
+                    pupilMask,
+                    formatExecutionLog(),
+                    itemsFound
+                )
+            } else if (mode == PUPIL_MODEL_128) {
                 val (pupilIrisMask, pupilMask, itemsFound) =
                     convertBytebufferMaskToBitmap(
                         segmentationMasks, MASK_WIDTH, MASK_HEIGHT

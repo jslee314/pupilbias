@@ -38,7 +38,7 @@ class ImagesViewModel @Inject constructor(
             for(i in files!!.indices) {
                 inputStream = assetManager.open("iris/" + files[i])
                 val drawable: Drawable = Drawable.createFromStream(inputStream, null)
-                val irisImg: IrisImage = IrisImage(id = i ,fileName = files[i],  imgDrawableInt = drawable)
+                val irisImg: IrisImage = IrisImage(id = i ,fileName = files[i],  originalImg = drawable)
                 _irisImages.value?.add(irisImg)
             }
         } catch (e: IOException) {

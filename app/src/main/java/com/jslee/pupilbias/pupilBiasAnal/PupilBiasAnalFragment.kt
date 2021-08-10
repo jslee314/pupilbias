@@ -1,6 +1,8 @@
 package com.jslee.pupilbias.pupilBiasAnal
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +16,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.jslee.pupilbias.MyApplication
 import com.jslee.pupilbias.R
+import com.jslee.pupilbias.data.constant.AppDataConstants
 import com.jslee.pupilbias.databinding.FragmentPupilBiasAnalBinding
+import com.jslee.pupilbias.pupilSeg.AutoSetPupilAndIris
 import javax.inject.Inject
 
 class PupilBiasAnalFragment: Fragment(){
@@ -49,13 +53,15 @@ class PupilBiasAnalFragment: Fragment(){
 
     private fun setUpBinding(){
         binding.lifecycleOwner = this
+
         binding.viewModel = viewModel
 
         viewModel.start(args.selectedImage)
-
     }
 
     private fun setUpView(){
+
+
 
     }
 
@@ -65,10 +71,8 @@ class PupilBiasAnalFragment: Fragment(){
             if( it != null ){
                 this.findNavController().navigate(
                     PupilBiasAnalFragmentDirections.actionPupilBiasAnalFragmentToPupilResultFragment(it)
-
                 )
             }
         })
-
     }
 }
