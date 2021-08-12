@@ -14,11 +14,14 @@ import javax.inject.Inject
 class PupilBiasAnalViewModel @Inject constructor(
     private val repository: AppRepository
 ) : ViewModel() {
-
+    /**
+     * ImageView 객체 */
     private val _irisImage = MutableLiveData<IrisImage>()
     val irisImage: LiveData<IrisImage>
         get() = _irisImage
 
+    /**
+     * ImageView에 보여줄 데이터 */
     private val _radiusAnalBitmap = MutableLiveData<Bitmap>()
     val radiusAnalBitmap: LiveData<Bitmap>
         get() = _radiusAnalBitmap
@@ -36,7 +39,8 @@ class PupilBiasAnalViewModel @Inject constructor(
     val twelveAnalBitmap: LiveData<Bitmap>
         get() = _twelveAnalBitmap
 
-    /** 다음 버튼 클릭 여부 */
+    /**
+     * 다음 버튼 클릭 여부 */
     private val _isClickedNextBtn = MutableLiveData<IrisImage>()
     val isClickedNextBtn: LiveData<IrisImage>
         get() = _isClickedNextBtn
@@ -49,16 +53,17 @@ class PupilBiasAnalViewModel @Inject constructor(
         /** 1. 지름 분석 : 동공을 둘러싼 직사각형의 가로 및 세로의 크기와 예측원 반지름 크기 비교 */
         // Rect width, Height vs Pupil Radius
         val bitmapDrawable = _irisImage.value!!.maskImg as BitmapDrawable
-        var pupilMaskBitmap: Bitmap = bitmapDrawable.bitmap
+        var bitmap: Bitmap = bitmapDrawable.bitmap
+        //var pupilMaskBitmap: Bitmap = bitmapDrawable.bitmap
 
 
-        pupilMaskBitmap = autoSetPupilAndIris.drawCircle(_irisImage.value!!.pupilCenter, pupilMaskBitmap,
-            _irisImage.value!!.pupilRadius, AppDataConstants.pupilCircleColor)
-
-        // drawRadius(point: Point, pupilMaskBitmap: Bitmap, width:Int, height:Int): Bitmap
-
-        val bitmap: Bitmap = autoSetPupilAndIris.drawRadius(_irisImage.value!!.pupilCenter, pupilMaskBitmap,
-            20,30, AppDataConstants.pupilRectColor)
+//        pupilMaskBitmap = autoSetPupilAndIris.drawCircle(_irisImage.value!!.pupilCenter, pupilMaskBitmap,
+//            _irisImage.value!!.pupilRadius, AppDataConstants.pupilCircleColor)
+//
+//        // drawRadius(point: Point, pupilMaskBitmap: Bitmap, width:Int, height:Int): Bitmap
+//
+//        val bitmap: Bitmap = autoSetPupilAndIris.drawRadius(_irisImage.value!!.pupilCenter, pupilMaskBitmap,
+//            20,30, AppDataConstants.pupilRectColor)
 
         _radiusAnalBitmap.value = bitmap
 
