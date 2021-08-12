@@ -21,7 +21,7 @@ class PupilBiasAnalViewModel @Inject constructor(
         get() = _irisImage
 
     /**
-     * ImageView에 보여줄 데이터 */
+     * ImageView에 보여줄 분석 결과 데이터 */
     private val _radiusAnalBitmap = MutableLiveData<Bitmap>()
     val radiusAnalBitmap: LiveData<Bitmap>
         get() = _radiusAnalBitmap
@@ -29,7 +29,6 @@ class PupilBiasAnalViewModel @Inject constructor(
     private val _centerAnalBitmap = MutableLiveData<Bitmap>()
     val centerAnalBitmap: LiveData<Bitmap>
         get() = _centerAnalBitmap
-
 
     private val _fourSectorAnalBitmap = MutableLiveData<Bitmap>()
     val fourSectorAnalBitmap: LiveData<Bitmap>
@@ -40,53 +39,98 @@ class PupilBiasAnalViewModel @Inject constructor(
         get() = _twelveAnalBitmap
 
     /**
+     * TextView에 보여줄 분석 결과 데이터 */
+
+    private val _radiusAnalString = MutableLiveData<String>()
+    val radiusAnalString: LiveData<String>
+        get() = _radiusAnalString
+
+    private val _centerAnalString = MutableLiveData<String>()
+    val centerAnalString: LiveData<String>
+        get() = _centerAnalString
+
+    private val _fourSectorAnalString = MutableLiveData<String>()
+    val fourSectorAnalString: LiveData<String>
+        get() = _fourSectorAnalString
+
+    private val _twelveAnalString = MutableLiveData<String>()
+    val twelveAnalString: LiveData<String>
+        get() = _twelveAnalString
+
+    /**
      * 다음 버튼 클릭 여부 */
     private val _isClickedNextBtn = MutableLiveData<IrisImage>()
     val isClickedNextBtn: LiveData<IrisImage>
         get() = _isClickedNextBtn
 
+    private val autoSetPupilAndIris = AutoSetPupilAndIris()
+
     fun start (irisImage: IrisImage) {
         _irisImage.value = irisImage
 
-        val autoSetPupilAndIris = AutoSetPupilAndIris()
-
-        /** 1. 지름 분석 : 동공을 둘러싼 직사각형의 가로 및 세로의 크기와 예측원 반지름 크기 비교 */
-        // Rect width, Height vs Pupil Radius
         val bitmapDrawable = _irisImage.value!!.maskImg as BitmapDrawable
-        var bitmap: Bitmap = bitmapDrawable.bitmap
-        //var pupilMaskBitmap: Bitmap = bitmapDrawable.bitmap
+        val pupilMaskBitmap: Bitmap = bitmapDrawable.bitmap
+
+        _radiusAnalBitmap.value = pupilMaskBitmap
+        _centerAnalBitmap.value = pupilMaskBitmap
+        _fourSectorAnalBitmap.value = pupilMaskBitmap
+        _twelveAnalBitmap.value = pupilMaskBitmap
+
+        _radiusAnalString.value = "_radiusAnalString"
+        _centerAnalString.value = "_centerAnalString"
+        _fourSectorAnalString.value = "_fourSectorAnalString"
+        _twelveAnalString.value = "_twelveAnalString"
+
+    }
+
+    /**
+     * 1. 지름 분석 : 동공을 둘러싼 직사각형의 가로 및 세로의 크기와 예측원 반지름 크기 비교 */
+    fun getRadiusAnal(bitmap: Bitmap){
+        // Rect width, Height vs Pupil Radius
+        val pupilMaskBitmap = autoSetPupilAndIris.drawCircle(_irisImage.value!!.pupilCenter, bitmap,
+            _irisImage.value!!.pupilRadius, AppDataConstants.pupilCircleColor)
 
 
-//        pupilMaskBitmap = autoSetPupilAndIris.drawCircle(_irisImage.value!!.pupilCenter, pupilMaskBitmap,
-//            _irisImage.value!!.pupilRadius, AppDataConstants.pupilCircleColor)
-//
-//        // drawRadius(point: Point, pupilMaskBitmap: Bitmap, width:Int, height:Int): Bitmap
-//
-//        val bitmap: Bitmap = autoSetPupilAndIris.drawRadius(_irisImage.value!!.pupilCenter, pupilMaskBitmap,
-//            20,30, AppDataConstants.pupilRectColor)
+
+        // drawRadius(point: Point, pupilMaskBitmap: Bitmap, width:Int, height:Int): Bitmap
+
+        val bitmap: Bitmap = autoSetPupilAndIris.drawRadius(_irisImage.value!!.pupilCenter, pupilMaskBitmap,
+            20,30, AppDataConstants.pupilRectColor)
 
         _radiusAnalBitmap.value = bitmap
+    }
 
-        /** 2. 중심 분석 : 동공을 둘러싼 직사각형의 중심 좌표와 동공 영역의 무게중심(1차 모멘텀)좌표를 비교 */
+
+    /**
+     * 2. 중심 분석 : 동공을 둘러싼 직사각형의 중심 좌표와 동공 영역의 무게중심(1차 모멘텀)좌표를 비교 */
+    fun getCenterAnal(bitmap: Bitmap){
+
         // Rect 중심, Pupil 중심
-
         _centerAnalBitmap.value = bitmap
+    }
 
-        /** 3. Four Sector */
+    /**
+     * 3. Four Sector */
+    fun getFourSectorAAnal(bitmap: Bitmap){
+
         // 각도 별로 동공 영역을 자른 후 해당하는 픽셀수를 표시
         // drawArc(point: Point, pupilMaskBitmap: Bitmap, radius:Int, scalar: Scalar, startAngle: Double, endAngle:Double)
         _fourSectorAnalBitmap.value = bitmap
+    }
 
+    /**
+     * 4. Twelve Sector */
+    fun getTwelveSectorAnal(bitmap: Bitmap){
 
-        /** 4. Twelve Sector */
         // 각도 별로 동공 영역을 자른 후 해당하는 픽셀수를 표시
         _twelveAnalBitmap.value = bitmap
-
     }
+
 
     /** 버튼 클릭 시 수행되는 함수들 */
     fun onClickedNextBtn(){
         _isClickedNextBtn.value = irisImage.value
     }
+
 
 }

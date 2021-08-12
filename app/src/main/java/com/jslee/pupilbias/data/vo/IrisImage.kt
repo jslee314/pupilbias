@@ -20,17 +20,26 @@ data class IrisImage (
     var maskImg: Drawable? = null
     var segmentationLog: String = " "
 
-
-    // 컨투어 분석
-    var contourPointList: List<Point>? = null
-
-    // 
+    // 이미지 크기
     var imgWidth: Int = 640
     var imgHeight: Int = 480
+
+    // 컨투어
+    var contourPointList: List<Point>? = null
+
+    // 예측원의 반지름
     var pupilRadius: Int = 0
 
-    var pupilCenter: Point = Point(0.0, 0.0)
-    var rectCenter: Point = Point(0.0, 0.0)
+    // 예측원의 중심
+    var pupilCenter: Point = Point(320.0, 240.0)
+
+    // 예측 사각형 가로, 세로
+    var rectWidth: Int = 100
+    var rectHeight: Int = 100
+
+    // 예측 사각형 중심
+    var rectCenter: Point = Point(320.0, 240.0)
+
 
 
 }
