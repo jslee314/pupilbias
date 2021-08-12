@@ -62,7 +62,6 @@ class PupilBiasAnalFragment: Fragment(){
     private fun setUpView(){
 
 
-
     }
 
     private fun setUpObserver(){
