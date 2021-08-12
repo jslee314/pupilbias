@@ -18,16 +18,19 @@ data class IrisImage (
 ) : Parcelable {
 
     var maskImg: Drawable? = null
-
-    var imgWidth: Int = 640
-    var imgHeight: Int = 480
-
-    var contourPointList: List<Point>? = null
-
     var segmentationLog: String = " "
 
-    var pupilCenter: Point = Point(0.0, 0.0)
 
+    // 컨투어 분석
+    var contourPointList: List<Point>? = null
+
+    // 
+    var imgWidth: Int = 640
+    var imgHeight: Int = 480
     var pupilRadius: Int = 0
+
+    var pupilCenter: Point = Point(0.0, 0.0)
+    var rectCenter: Point = Point(0.0, 0.0)
+
 
 }
