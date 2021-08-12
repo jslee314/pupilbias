@@ -1,7 +1,6 @@
 package com.jslee.pupilbias.pupilSeg
 
-import android.R.attr.x
-import android.R.attr.y
+
 import android.graphics.Bitmap
 import org.opencv.android.Utils
 import org.opencv.core.*
@@ -85,6 +84,40 @@ class AutoSetPupilAndIris {
         return (sumRadius.toFloat() / contourPointList.size).roundToInt()
     }
 
+    /**
+     * @작성자 : 이재선
+     * @내용 : 예측다각형의 가로 세로 구하기
+     * 도형의 contour의 좌표들의
+     * 최왼쪽 및 최오른쪽의 x좌표,
+     * 최상단 및 최하단의 y 좌표 */
+    fun getRectParm(contourPointList: List<Point>): Pair<Point, Point> {
+
+        var rectStart: Point = Point(0.0, 0.0)
+        var rectEnd: Point = Point(640.0, 480.0)
+
+
+        for (i in contourPointList.indices) {
+            var Px: Double = contourPointList[i].x
+            var Py: Double = contourPointList[i].y
+
+            if (rectStart.x >= Px) {
+                rectStart.x = Px
+            }
+            if (rectEnd.x <= Px) {
+                rectEnd.x = Px
+            }
+
+            if (rectStart.y >= Py) {
+                rectStart.y = Py
+            }
+            if (rectEnd.y <= Py) {
+                rectEnd.y = Py
+            }
+        }
+
+        return Pair(rectStart, rectEnd)
+    }
+
 
     fun drawCircle(point: Point, pupilMaskBitmap: Bitmap, radius:Int, scalar: Scalar): Bitmap {
         var colorMat: Mat = Mat()
@@ -99,15 +132,18 @@ class AutoSetPupilAndIris {
         return drawBitmap
     }
 
-    fun drawRadius(point: Point, pupilMaskBitmap: Bitmap, width:Int, height:Int, scalar: Scalar): Bitmap {
+    fun drawRadius(pupilMaskBitmap: Bitmap, rectCenter: Point, width:Int, height:Int, scalar: Scalar): Bitmap {
         var grayMat: Mat = Mat()
         Utils.bitmapToMat(pupilMaskBitmap, grayMat)
         Imgproc.cvtColor(grayMat, grayMat, Imgproc.COLOR_RGB2GRAY)
 
+        val cX: Double = rectCenter.x
+        val cY: Double = rectCenter.y
+
         Imgproc.rectangle(
             grayMat,
-            Point((x - 5).toDouble(), (y - 5).toDouble()),
-            Point((x + 5).toDouble(), (y + 5).toDouble()),
+            Point((cX - width/2).toDouble(), (cY - width/2).toDouble()),
+            Point((cX + height/2).toDouble(), (cY + height/2).toDouble()),
             scalar, -1)
 
         val drawBitmap: Bitmap = pupilMaskBitmap.copy(pupilMaskBitmap.config, pupilMaskBitmap.isMutable)

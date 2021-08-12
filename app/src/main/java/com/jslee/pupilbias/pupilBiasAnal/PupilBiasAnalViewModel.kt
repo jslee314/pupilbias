@@ -9,6 +9,7 @@ import com.jslee.pupilbias.data.AppRepository
 import com.jslee.pupilbias.data.constant.AppDataConstants
 import com.jslee.pupilbias.data.vo.IrisImage
 import com.jslee.pupilbias.pupilSeg.AutoSetPupilAndIris
+import org.opencv.core.Point
 import javax.inject.Inject
 
 class PupilBiasAnalViewModel @Inject constructor(
@@ -81,23 +82,34 @@ class PupilBiasAnalViewModel @Inject constructor(
         _fourSectorAnalString.value = "_fourSectorAnalString"
         _twelveAnalString.value = "_twelveAnalString"
 
+
+        val rect = irisImage.contourPointList?.let { autoSetPupilAndIris.getRectParm(it) }
+        _irisImage.value!!.rectStart = rect?.first ?: Point(0.0, 0.0)
+        _irisImage.value!!.rectEnd = rect?.second ?: Point(640.0, 480.0)
+
+        getRadiusAnal(pupilMaskBitmap)
+
+
     }
 
     /**
      * 1. 지름 분석 : 동공을 둘러싼 직사각형의 가로 및 세로의 크기와 예측원 반지름 크기 비교 */
     fun getRadiusAnal(bitmap: Bitmap){
-        // Rect width, Height vs Pupil Radius
+
+        // 1> 지름 분석 Rect width, Height vs Pupil Radius 크기 비교
+
+        _radiusAnalString.value = " rectWidth : " + _irisImage.value!!.rectWidth + " rectHeight : " + _irisImage.value!!.rectHeight
+        // 2> 지름 분석 Rect, Circle 이미지로 표현
         val pupilMaskBitmap = autoSetPupilAndIris.drawCircle(_irisImage.value!!.pupilCenter, bitmap,
             _irisImage.value!!.pupilRadius, AppDataConstants.pupilCircleColor)
 
 
-
-        // drawRadius(point: Point, pupilMaskBitmap: Bitmap, width:Int, height:Int): Bitmap
-
-        val bitmap: Bitmap = autoSetPupilAndIris.drawRadius(_irisImage.value!!.pupilCenter, pupilMaskBitmap,
-            20,30, AppDataConstants.pupilRectColor)
+        val bitmap: Bitmap = autoSetPupilAndIris.drawRadius(pupilMaskBitmap,
+            _irisImage.value!!.rectCenter, _irisImage.value!!.rectWidth, _irisImage.value!!.rectHeight,
+            AppDataConstants.pupilRectColor)
 
         _radiusAnalBitmap.value = bitmap
+
     }
 
 
@@ -107,6 +119,8 @@ class PupilBiasAnalViewModel @Inject constructor(
 
         // Rect 중심, Pupil 중심
         _centerAnalBitmap.value = bitmap
+        _centerAnalString.value = "_centerAnalString"
+
     }
 
     /**
@@ -116,6 +130,8 @@ class PupilBiasAnalViewModel @Inject constructor(
         // 각도 별로 동공 영역을 자른 후 해당하는 픽셀수를 표시
         // drawArc(point: Point, pupilMaskBitmap: Bitmap, radius:Int, scalar: Scalar, startAngle: Double, endAngle:Double)
         _fourSectorAnalBitmap.value = bitmap
+        _fourSectorAnalString.value = "_fourSectorAnalString"
+
     }
 
     /**
@@ -124,8 +140,9 @@ class PupilBiasAnalViewModel @Inject constructor(
 
         // 각도 별로 동공 영역을 자른 후 해당하는 픽셀수를 표시
         _twelveAnalBitmap.value = bitmap
-    }
+        _twelveAnalString.value = "_twelveAnalString"
 
+    }
 
     /** 버튼 클릭 시 수행되는 함수들 */
     fun onClickedNextBtn(){

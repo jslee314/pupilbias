@@ -33,12 +33,21 @@ data class IrisImage (
     // 예측원의 중심
     var pupilCenter: Point = Point(320.0, 240.0)
 
+    // 예측 사각형 시작점, 끝점
+    var rectStart: Point= Point(0.0, 0.0)
+    var rectEnd: Point= Point(640.0, 480.0)
+
     // 예측 사각형 가로, 세로
-    var rectWidth: Int = 100
-    var rectHeight: Int = 100
+    val rectWidth: Int = (rectEnd.x - rectStart.x).toInt()
+
+    val rectHeight: Int
+        get() = (rectEnd.y - rectStart.y).toInt()
 
     // 예측 사각형 중심
-    var rectCenter: Point = Point(320.0, 240.0)
+    val rectCenter: Point
+        get() = Point(rectEnd.x - (rectWidth / 2), rectEnd.y - (rectHeight / 2))
+
+
 
 
 
