@@ -88,8 +88,6 @@ class PupilBiasAnalViewModel @Inject constructor(
         _irisImage.value!!.rectEnd = rect?.second ?: Point(640.0, 480.0)
 
         getRadiusAnal(pupilMaskBitmap)
-
-
     }
 
     /**
