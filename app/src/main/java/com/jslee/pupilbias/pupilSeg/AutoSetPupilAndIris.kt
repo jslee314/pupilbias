@@ -1,6 +1,7 @@
 package com.jslee.pupilbias.pupilSeg
 
 import android.graphics.Bitmap
+import android.util.Log
 import org.opencv.android.Utils
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
@@ -153,27 +154,28 @@ class AutoSetPupilAndIris {
         return degree
     }
 
-    fun getArcCount(pupilMaskBitmap: Bitmap, centerPoint: Point, startAngle: Double, endAngle: Double): Bitmap{
+    fun getArcCount(pupilMaskBitmap: Bitmap, centerPoint: Point, startAngle: Double, endAngle: Double): Pair<Bitmap, Int>{
 
         var pupilMat: Mat = Mat()
         Utils.bitmapToMat(pupilMaskBitmap, pupilMat) // Android Bitmap are RGB But in opencv Mat, the channels are BGR by default.
-//        Imgproc.cvtColor(colorMat, colorMat, Imgproc.COLOR_BGR2RGB)
 
         val zeroMat: Mat = Mat.zeros(pupilMat.size(), CvType.CV_8UC4)
         Imgproc.ellipse(zeroMat, centerPoint, Size(pupilMaskBitmap.height.toDouble(), pupilMaskBitmap.height.toDouble()),
-            0.0, startAngle, endAngle, Scalar(255.0), -1)
-
-
+            0.0, startAngle, endAngle, Scalar(255.0, 255.0 , 255.0), -1)
 
         var dstMat: Mat = Mat()
 
         Core.bitwise_and(zeroMat, pupilMat, dstMat)
 
+        Imgproc.cvtColor(dstMat, dstMat, Imgproc.COLOR_RGB2GRAY)
+        val count = Core.countNonZero(dstMat)
+        Log.d("jjslee", "count : " + count)
         Imgproc.cvtColor(dstMat, dstMat, Imgproc.COLOR_RGB2BGR)
+
         val drawBitmap: Bitmap = pupilMaskBitmap.copy(pupilMaskBitmap.config, pupilMaskBitmap.isMutable)
         Utils.matToBitmap(dstMat, drawBitmap)
 
-        return drawBitmap
+        return Pair(drawBitmap, count)
     }
 
 //    fun addImage(img1:Mat, img2:Mat, out:Mat) {

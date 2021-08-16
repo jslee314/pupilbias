@@ -96,7 +96,7 @@ class PupilBiasAnalViewModel @Inject constructor(
         getCenterAnal(resizedPupilBitmap)
 
         getFourSectorAnal(pupilMaskBitmap)
-        getTwelveSectorAnal(resizedPupilBitmap)
+        getTwelveSectorAnal(pupilMaskBitmap)
 
     }
 
@@ -149,7 +149,7 @@ class PupilBiasAnalViewModel @Inject constructor(
         val distance = autoSetPupilAndIris.getDistance(_irisImage.value!!.rectCenter, _irisImage.value!!.circleCenter)
         val angle = autoSetPupilAndIris.getAngle(_irisImage.value!!.rectCenter, _irisImage.value!!.circleCenter)
 
-        _centerAnalString.value = "rectCenter : (" + _irisImage.value!!.rectCenter.x + ", " + _irisImage.value!!.rectCenter.y + ")" +
+        _centerAnalString.value = " rectCenter : (" + _irisImage.value!!.rectCenter.x + ", " + _irisImage.value!!.rectCenter.y + ")" +
                 "\n pupilCenter : (" + _irisImage.value!!.circleCenter.x + ", " + _irisImage.value!!.circleCenter.y + ")" +
                 "\n\n" +
                 "두 점 사이의 길이  :  ${round(distance*10)/10} "+
@@ -183,15 +183,21 @@ class PupilBiasAnalViewModel @Inject constructor(
     fun getFourSectorAnal(bitmap: Bitmap) {
 
         // 각도 별로 동공 영역을 자른 후 해당하는 픽셀수를 표시
-        _fourSectorAnalString.value = "_fourSectorAnalString"
+        var dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 0.0, 90.0)
+        _fourSectorAnalBitmap.value = dst.first
+        _fourSectorAnalString.value = " first(0 - 90) : " + dst.second
 
-//        val Sector_1 = autoSetPupilAndIris.drawArc(_irisImage.value!!.circleCenter, bitmap,
-//            _irisImage.value!!.circleRadius,
-//            AppDataConstants.pupilParam3Color, 0.0, 90.0)
+        dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 90.0, 180.0)
+        _fourSectorAnalBitmap.value = dst.first
+        _fourSectorAnalString.value = _fourSectorAnalString.value + "\n second(90 - 180) : " + dst.second
 
-        val dstBitmap = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 0.0, 90.0)
+        dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 180.0, 270.0)
+        _fourSectorAnalBitmap.value = dst.first
+        _fourSectorAnalString.value = _fourSectorAnalString.value + "\n third(180 - 270) : " + dst.second
 
-        _fourSectorAnalBitmap.value = dstBitmap
+        dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 270.0, 360.0)
+        _fourSectorAnalBitmap.value = dst.first
+        _fourSectorAnalString.value = _fourSectorAnalString.value + "\n forth(270 - 360) : " + dst.second
 
     }
 
@@ -200,9 +206,54 @@ class PupilBiasAnalViewModel @Inject constructor(
     fun getTwelveSectorAnal(bitmap: Bitmap){
 
         // 각도 별로 동공 영역을 자른 후 해당하는 픽셀수를 표시
-        _twelveAnalString.value = "_twelveAnalString"
 
-        _twelveAnalBitmap.value = bitmap
+        var dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 0.0, 30.0)
+        _twelveAnalBitmap.value = dst.first
+        _twelveAnalString.value = " (0 - 30) : " + dst.second
+
+        dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 30.0, 60.0)
+        _twelveAnalBitmap.value = dst.first
+        _twelveAnalString.value = _twelveAnalString.value + "\n (30 - 60) : " + dst.second
+
+        dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 60.0, 90.0)
+        _twelveAnalBitmap.value = dst.first
+        _twelveAnalString.value = _twelveAnalString.value + "\n (60 - 90) : " + dst.second
+
+        dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 90.0, 120.0)
+        _twelveAnalBitmap.value = dst.first
+        _twelveAnalString.value = _twelveAnalString.value + "\n (90 - 120) : " + dst.second
+
+        dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 120.0, 150.0)
+        _twelveAnalBitmap.value = dst.first
+        _twelveAnalString.value = _twelveAnalString.value + "\n (120 - 150) : " + dst.second
+
+        dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 150.0, 180.0)
+        _twelveAnalBitmap.value = dst.first
+        _twelveAnalString.value = _twelveAnalString.value + "\n (150 - 180) : " + dst.second
+
+        dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 180.0, 210.0)
+        _twelveAnalBitmap.value = dst.first
+        _twelveAnalString.value = _twelveAnalString.value + "\n (180 - 210) : " + dst.second
+
+        dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 210.0, 240.0)
+        _twelveAnalBitmap.value = dst.first
+        _twelveAnalString.value = _twelveAnalString.value + "\n (210 - 240) : " + dst.second
+
+        dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 240.0, 270.0)
+        _twelveAnalBitmap.value = dst.first
+        _twelveAnalString.value = _twelveAnalString.value + "\n (240 - 270) : " + dst.second
+
+        dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 270.0, 300.0)
+        _twelveAnalBitmap.value = dst.first
+        _twelveAnalString.value = _twelveAnalString.value + "\n (270 - 300) : " + dst.second
+
+        dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 300.0, 330.0)
+        _twelveAnalBitmap.value = dst.first
+        _twelveAnalString.value = _twelveAnalString.value + "\n (300 - 360) : " + dst.second
+
+        dst = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 330.0, 360.0)
+        _twelveAnalBitmap.value = dst.first
+        _twelveAnalString.value = _twelveAnalString.value + "\n (330 - 360) : " + dst.second
 
     }
 
