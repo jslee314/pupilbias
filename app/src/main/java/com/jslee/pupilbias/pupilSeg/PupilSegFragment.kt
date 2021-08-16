@@ -3,9 +3,7 @@ package com.jslee.pupilbias.pupilSeg
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -83,6 +81,7 @@ class PupilSegFragment: Fragment() {
 
         resizedOriginBitmap = Bitmap.createScaledBitmap(bitmapDrawable.bitmap,
             viewModel.irisImage.value!!.imgWidth, viewModel.irisImage.value!!.imgHeight, true)
+
         val resizedPupilBitmap: Bitmap = Bitmap.createScaledBitmap(pupilExecutionResultVO.bitmapMaskOnly,
             viewModel.irisImage.value!!.imgWidth, viewModel.irisImage.value!!.imgHeight, true)
 
@@ -99,7 +98,6 @@ class PupilSegFragment: Fragment() {
 
         viewModel.isClickedSegPupilBtn.observe(viewLifecycleOwner, Observer {
             if ( it == true ) {
-
                 viewModel.irisImage.value!!.viewSeg = ViewStatus.VISIBLE
                 viewModel.updateIrisImage(viewModel.irisImage.value!!)
             }
@@ -110,7 +108,7 @@ class PupilSegFragment: Fragment() {
                 // 동공마스크의 중심 그리기
                 viewModel.updatePupilMaskBitmap(
                     autoSetPupilAndIris.drawCircle(
-                    viewModel.irisImage.value!!.pupilCenter, resizedOriginBitmap, 3, pupilCenterColor
+                    viewModel.irisImage.value!!.circleCenter, resizedOriginBitmap, 3, pupilCenterColor
                     )
                 )
             }
@@ -121,8 +119,8 @@ class PupilSegFragment: Fragment() {
                 // [STEP 2]: 동공마스크의 예측원 그리기
                 viewModel.updatePupilMaskBitmap(
                     autoSetPupilAndIris.drawCircle(
-                        viewModel.irisImage.value!!.pupilCenter, resizedOriginBitmap,
-                        viewModel.irisImage.value!!.pupilRadius, pupilCircleColor
+                        viewModel.irisImage.value!!.circleCenter, resizedOriginBitmap,
+                        viewModel.irisImage.value!!.circleRadius, pupilCircleColor
                     )
                 )
             }
@@ -133,7 +131,7 @@ class PupilSegFragment: Fragment() {
                 // 동공마스크의 예측원 그리기
                 viewModel.updatePupilMaskBitmap(
                     autoSetPupilAndIris.drawCircle(
-                        viewModel.irisImage.value!!.pupilCenter, viewModel.pupilMaskBitmap.value!!,
+                        viewModel.irisImage.value!!.circleCenter, viewModel.pupilMaskBitmap.value!!,
                         3, pupilCenterColor
                     )
                 )
@@ -142,20 +140,17 @@ class PupilSegFragment: Fragment() {
 
         viewModel.isClickedMaskCircleBtn.observe(viewLifecycleOwner, Observer {
             if ( it == true ) {
-
                 // [STEP 2]: 동공마스크의 예측원 그리기
-
                 viewModel.updatePupilMaskBitmap(
                     autoSetPupilAndIris.drawCircle(
-                        viewModel.irisImage.value!!.pupilCenter, viewModel.pupilMaskBitmap.value!!,
-                        viewModel.irisImage.value!!.pupilRadius, pupilCircleColor
+                        viewModel.irisImage.value!!.circleCenter, viewModel.pupilMaskBitmap.value!!,
+                        viewModel.irisImage.value!!.circleRadius, pupilCircleColor
                     )
                 )
             }
         })
 
         viewModel.isClickedNextBtn.observe(viewLifecycleOwner, Observer {
-
             if ( it != null ) {
                 this.findNavController().navigate(
                     PupilSegFragmentDirections.actionPupilSegFragmentToPupilBiasAnalFragment(it)

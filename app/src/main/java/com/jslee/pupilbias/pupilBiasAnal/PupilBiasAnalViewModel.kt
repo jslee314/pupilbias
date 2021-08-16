@@ -10,6 +10,7 @@ import com.jslee.pupilbias.data.constant.AppDataConstants
 import com.jslee.pupilbias.data.vo.IrisImage
 import com.jslee.pupilbias.pupilSeg.AutoSetPupilAndIris
 import org.opencv.core.Point
+import java.lang.Math.round
 import javax.inject.Inject
 
 class PupilBiasAnalViewModel @Inject constructor(
@@ -41,7 +42,6 @@ class PupilBiasAnalViewModel @Inject constructor(
 
     /**
      * TextView에 보여줄 분석 결과 데이터 */
-
     private val _radiusAnalString = MutableLiveData<String>()
     val radiusAnalString: LiveData<String>
         get() = _radiusAnalString
@@ -69,25 +69,35 @@ class PupilBiasAnalViewModel @Inject constructor(
     fun start (irisImage: IrisImage) {
         _irisImage.value = irisImage
 
-        val bitmapDrawable = _irisImage.value!!.maskImg as BitmapDrawable
-        val pupilMaskBitmap: Bitmap = bitmapDrawable.bitmap
+        val maskBitmapDrawable = _irisImage.value!!.maskImg as BitmapDrawable
+        val originalBitmapDrawable = _irisImage.value!!.originalImg as BitmapDrawable
 
-        _radiusAnalBitmap.value = pupilMaskBitmap
-        _centerAnalBitmap.value = pupilMaskBitmap
-        _fourSectorAnalBitmap.value = pupilMaskBitmap
-        _twelveAnalBitmap.value = pupilMaskBitmap
+        val pupilMaskBitmap: Bitmap = maskBitmapDrawable.bitmap
+        val originalMaskBitmap: Bitmap = originalBitmapDrawable.bitmap
+
+        val resizedPupilBitmap: Bitmap = Bitmap.createScaledBitmap(originalMaskBitmap,
+            _irisImage.value!!.imgWidth, _irisImage.value!!.imgHeight, true)
+
+        _radiusAnalBitmap.value = resizedPupilBitmap
+        _centerAnalBitmap.value = resizedPupilBitmap
+        _fourSectorAnalBitmap.value = resizedPupilBitmap
+        _twelveAnalBitmap.value = resizedPupilBitmap
 
         _radiusAnalString.value = "_radiusAnalString"
         _centerAnalString.value = "_centerAnalString"
         _fourSectorAnalString.value = "_fourSectorAnalString"
         _twelveAnalString.value = "_twelveAnalString"
 
-
         val rect = irisImage.contourPointList?.let { autoSetPupilAndIris.getRectParm(it) }
         _irisImage.value!!.rectStart = rect?.first ?: Point(0.0, 0.0)
         _irisImage.value!!.rectEnd = rect?.second ?: Point(640.0, 480.0)
 
-        getRadiusAnal(pupilMaskBitmap)
+        getRadiusAnal(resizedPupilBitmap)
+        getCenterAnal(resizedPupilBitmap)
+
+        getFourSectorAnal(pupilMaskBitmap)
+        getTwelveSectorAnal(resizedPupilBitmap)
+
     }
 
     /**
@@ -95,40 +105,93 @@ class PupilBiasAnalViewModel @Inject constructor(
     fun getRadiusAnal(bitmap: Bitmap){
 
         // 1> 지름 분석 Rect width, Height vs Pupil Radius 크기 비교
+        _radiusAnalString.value = " rectWidth : " + _irisImage.value!!.rectWidth +
+                "\n rectHeight : " + _irisImage.value!!.rectHeight +
+                "\n circleRadius : " + _irisImage.value!!.circleRadius * 2
 
-        _radiusAnalString.value = " rectWidth : " + _irisImage.value!!.rectWidth + " rectHeight : " + _irisImage.value!!.rectHeight
-        // 2> 지름 분석 Rect, Circle 이미지로 표현
-        val pupilMaskBitmap = autoSetPupilAndIris.drawCircle(_irisImage.value!!.pupilCenter, bitmap,
-            _irisImage.value!!.pupilRadius, AppDataConstants.pupilCircleColor)
+        if(_irisImage.value!!.rectWidth <(_irisImage.value!!.circleRadius * 2)
+            && _irisImage.value!!.rectHeight >(_irisImage.value!!.circleRadius * 2)){
+            _radiusAnalString.value = _radiusAnalString.value + "\n\n세로로 홀쭉한 형태"
+        }else if(_irisImage.value!!.rectWidth >(_irisImage.value!!.circleRadius * 2)
+            && _irisImage.value!!.rectHeight < (_irisImage.value!!.circleRadius * 2)){
+            _radiusAnalString.value = _radiusAnalString.value + "\n\n가로로 뚱뚱한 형태"
+        }else{
+            _radiusAnalString.value = _radiusAnalString.value + "\n\n고른 형태"
+        }
 
+        // 2> 중심 분석 Rect 중심점, 이미지로 표현
+        val radiusCenterBitmap = autoSetPupilAndIris.drawRadius(bitmap,
+            _irisImage.value!!.rectCenter, _irisImage.value!!.rectCenter,
+            AppDataConstants.pupilParam1Color)
 
-        val bitmap: Bitmap = autoSetPupilAndIris.drawRadius(pupilMaskBitmap,
-            _irisImage.value!!.rectCenter, _irisImage.value!!.rectWidth, _irisImage.value!!.rectHeight,
-            AppDataConstants.pupilRectColor)
+        val radiusBitmap = autoSetPupilAndIris.drawRadius(radiusCenterBitmap,
+            _irisImage.value!!.rectStart, _irisImage.value!!.rectEnd,
+            AppDataConstants.pupilParam1Color)
 
-        _radiusAnalBitmap.value = bitmap
+        // 3> 중심 분석 Circle 중심점, 이미지로 표현
+        val circleCenterBitmap = autoSetPupilAndIris.drawRadius(radiusBitmap,
+            _irisImage.value!!.circleCenter, _irisImage.value!!.circleCenter,
+            AppDataConstants.pupilParam2Color)
 
+        val circleBitmap = autoSetPupilAndIris.drawCircle(_irisImage.value!!.circleCenter, circleCenterBitmap,
+            _irisImage.value!!.circleRadius,
+            AppDataConstants.pupilParam2Color)
+
+        _radiusAnalBitmap.value = circleBitmap
     }
-
 
     /**
      * 2. 중심 분석 : 동공을 둘러싼 직사각형의 중심 좌표와 동공 영역의 무게중심(1차 모멘텀)좌표를 비교 */
     fun getCenterAnal(bitmap: Bitmap){
 
-        // Rect 중심, Pupil 중심
-        _centerAnalBitmap.value = bitmap
-        _centerAnalString.value = "_centerAnalString"
+        // 1> Rect 중심, Pupil 중심
 
+        val distance = autoSetPupilAndIris.getDistance(_irisImage.value!!.rectCenter, _irisImage.value!!.circleCenter)
+        val angle = autoSetPupilAndIris.getAngle(_irisImage.value!!.rectCenter, _irisImage.value!!.circleCenter)
+
+        _centerAnalString.value = "rectCenter : (" + _irisImage.value!!.rectCenter.x + ", " + _irisImage.value!!.rectCenter.y + ")" +
+                "\n pupilCenter : (" + _irisImage.value!!.circleCenter.x + ", " + _irisImage.value!!.circleCenter.y + ")" +
+                "\n\n" +
+                "두 점 사이의 길이  :  ${round(distance*10)/10} "+
+                "\n" +
+                "두 점 사이의 각도  :  ${round(angle*10)/10}"
+
+        // 2> 중심 분석 Rect 중심점, 이미지로 표현
+        val radiusCenterBitmap = autoSetPupilAndIris.drawRadius(bitmap,
+            _irisImage.value!!.rectCenter, _irisImage.value!!.rectCenter,
+            AppDataConstants.pupilParam1Color)
+
+        val radiusBitmap = autoSetPupilAndIris.drawRadius(radiusCenterBitmap,
+            _irisImage.value!!.rectStart, _irisImage.value!!.rectEnd,
+            AppDataConstants.pupilParam1Color)
+
+        // 3> 중심 분석 Circle 중심점, 이미지로 표현
+        val circleCenterBitmap = autoSetPupilAndIris.drawRadius(radiusBitmap,
+            _irisImage.value!!.circleCenter, _irisImage.value!!.circleCenter,
+            AppDataConstants.pupilParam2Color)
+
+        val circleBitmap = autoSetPupilAndIris.drawCircle(_irisImage.value!!.circleCenter,
+            circleCenterBitmap,
+            _irisImage.value!!.circleRadius,
+            AppDataConstants.pupilParam2Color)
+
+        _centerAnalBitmap.value = circleBitmap
     }
 
     /**
      * 3. Four Sector */
-    fun getFourSectorAAnal(bitmap: Bitmap){
+    fun getFourSectorAnal(bitmap: Bitmap) {
 
         // 각도 별로 동공 영역을 자른 후 해당하는 픽셀수를 표시
-        // drawArc(point: Point, pupilMaskBitmap: Bitmap, radius:Int, scalar: Scalar, startAngle: Double, endAngle:Double)
-        _fourSectorAnalBitmap.value = bitmap
         _fourSectorAnalString.value = "_fourSectorAnalString"
+
+//        val Sector_1 = autoSetPupilAndIris.drawArc(_irisImage.value!!.circleCenter, bitmap,
+//            _irisImage.value!!.circleRadius,
+//            AppDataConstants.pupilParam3Color, 0.0, 90.0)
+
+        val dstBitmap = autoSetPupilAndIris.getArcCount(bitmap, _irisImage.value!!.circleCenter, 0.0, 90.0)
+
+        _fourSectorAnalBitmap.value = dstBitmap
 
     }
 
@@ -137,8 +200,9 @@ class PupilBiasAnalViewModel @Inject constructor(
     fun getTwelveSectorAnal(bitmap: Bitmap){
 
         // 각도 별로 동공 영역을 자른 후 해당하는 픽셀수를 표시
-        _twelveAnalBitmap.value = bitmap
         _twelveAnalString.value = "_twelveAnalString"
+
+        _twelveAnalBitmap.value = bitmap
 
     }
 

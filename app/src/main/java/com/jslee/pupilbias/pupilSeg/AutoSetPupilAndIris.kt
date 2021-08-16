@@ -1,15 +1,16 @@
 package com.jslee.pupilbias.pupilSeg
 
-
 import android.graphics.Bitmap
 import org.opencv.android.Utils
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 import org.opencv.imgproc.Moments
 import org.opencv.utils.Converters
+import java.lang.Math.*
 import java.util.*
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+
 
 class AutoSetPupilAndIris {
 
@@ -24,7 +25,7 @@ class AutoSetPupilAndIris {
         var contourMat: Mat = Mat()
 
         var contours = ArrayList<MatOfPoint>()
-        Imgproc.findContours( grayMat, contours, contourMat, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE )
+        Imgproc.findContours(grayMat, contours, contourMat, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE)
 
         // step2: 영역이 가장 큰 contour 찾기
         val maxValIdx = findLargestContour(contours)
@@ -34,6 +35,23 @@ class AutoSetPupilAndIris {
         Converters.Mat_to_vector_Point(largestContour, contourPointList)
 
         return contourPointList
+    }
+
+    fun getMinEnclosingCircle(bitmap: Bitmap, largestContour: MatOfPoint){
+
+        var imageMat: Mat = Mat()
+        // step 0: 이미지 resize
+        Utils.bitmapToMat(bitmap, imageMat)
+
+        val radius = FloatArray(1)
+        val center = Point()
+
+        val currentContour2f = MatOfPoint2f()
+        largestContour.convertTo(currentContour2f, CvType.CV_32FC2)
+
+        Imgproc.minEnclosingCircle(currentContour2f, center, radius)
+        Imgproc.circle(imageMat, center, radius[0].toInt(), Scalar(255.0, 0.0, 0.0))
+
     }
 
     /**
@@ -60,6 +78,7 @@ class AutoSetPupilAndIris {
         // step3: contour의 1차 모멘트 구하기기
         val moments: Moments = Imgproc.moments(largestContour)
         val centroid = Point()
+
         centroid.x = (moments._m10 / moments._m00)
         centroid.y = (moments._m01 / moments._m00)
         return centroid
@@ -76,6 +95,7 @@ class AutoSetPupilAndIris {
         var sumRadius = 0
         val cX: Double = pupilCenter.x
         val cY: Double = pupilCenter.y
+
         for (i in contourPointList.indices) {
             val x: Double = contourPointList[i].x
             val y: Double = contourPointList[i].y
@@ -92,23 +112,23 @@ class AutoSetPupilAndIris {
      * 최상단 및 최하단의 y 좌표 */
     fun getRectParm(contourPointList: List<Point>): Pair<Point, Point> {
 
-        var rectStart: Point = Point(0.0, 0.0)
-        var rectEnd: Point = Point(640.0, 480.0)
-
+        var rectStart: Point = Point(640.0, 480.0)
+        var rectEnd: Point = Point(0.0, 0.0)
 
         for (i in contourPointList.indices) {
+
             var Px: Double = contourPointList[i].x
             var Py: Double = contourPointList[i].y
 
             if (rectStart.x >= Px) {
                 rectStart.x = Px
             }
-            if (rectEnd.x <= Px) {
-                rectEnd.x = Px
-            }
-
             if (rectStart.y >= Py) {
                 rectStart.y = Py
+            }
+
+            if (rectEnd.x <= Px) {
+                rectEnd.x = Px
             }
             if (rectEnd.y <= Py) {
                 rectEnd.y = Py
@@ -117,6 +137,56 @@ class AutoSetPupilAndIris {
 
         return Pair(rectStart, rectEnd)
     }
+
+    fun getDistance(point1: Point, point2: Point): Double {
+
+        return Math.sqrt(pow(abs(point2.x-point1.x), 2.0) + pow(abs(point2.y-point1.y), 2.0));
+    }
+
+    fun getAngle(point1: Point, point2: Point): Double {
+        val dx = point2.x - point1.x
+        val dy = point2.y - point1.y
+
+        val rad = atan2(dx, dy)
+        val degree = (rad*180) / PI
+
+        return degree
+    }
+
+    fun getArcCount(pupilMaskBitmap: Bitmap, centerPoint: Point, startAngle: Double, endAngle: Double): Bitmap{
+
+        var pupilMat: Mat = Mat()
+        Utils.bitmapToMat(pupilMaskBitmap, pupilMat) // Android Bitmap are RGB But in opencv Mat, the channels are BGR by default.
+//        Imgproc.cvtColor(colorMat, colorMat, Imgproc.COLOR_BGR2RGB)
+
+        val zeroMat: Mat = Mat.zeros(pupilMat.size(), CvType.CV_8UC4)
+        Imgproc.ellipse(zeroMat, centerPoint, Size(pupilMaskBitmap.height.toDouble(), pupilMaskBitmap.height.toDouble()),
+            0.0, startAngle, endAngle, Scalar(255.0), -1)
+
+
+
+        var dstMat: Mat = Mat()
+
+        Core.bitwise_and(zeroMat, pupilMat, dstMat)
+
+        Imgproc.cvtColor(dstMat, dstMat, Imgproc.COLOR_RGB2BGR)
+        val drawBitmap: Bitmap = pupilMaskBitmap.copy(pupilMaskBitmap.config, pupilMaskBitmap.isMutable)
+        Utils.matToBitmap(dstMat, drawBitmap)
+
+        return drawBitmap
+    }
+
+//    fun addImage(img1:Mat, img2:Mat, out:Mat) {
+//        for (var y:Int = 0; y < out.size().height; y++){
+//            for (int x = 0; x < out.size().width; x++)
+//            {
+//                if (img1.at<uchar>(y, x) + img2.at<uchar>(y, x) > 255)
+//                    out.at<uchar>(y, x) = 255;
+//                else
+//                    out.at<uchar>(y, x) = img1.at<uchar>(y, x) + img2.at<uchar>(y, x);
+//            }
+//        }
+//    }
 
 
     fun drawCircle(point: Point, pupilMaskBitmap: Bitmap, radius:Int, scalar: Scalar): Bitmap {
@@ -132,33 +202,32 @@ class AutoSetPupilAndIris {
         return drawBitmap
     }
 
-    fun drawRadius(pupilMaskBitmap: Bitmap, rectCenter: Point, width:Int, height:Int, scalar: Scalar): Bitmap {
-        var grayMat: Mat = Mat()
-        Utils.bitmapToMat(pupilMaskBitmap, grayMat)
-        Imgproc.cvtColor(grayMat, grayMat, Imgproc.COLOR_RGB2GRAY)
+    fun drawRadius(pupilMaskBitmap: Bitmap, rectStart:Point, rectEnd:Point, scalar: Scalar): Bitmap {
 
-        val cX: Double = rectCenter.x
-        val cY: Double = rectCenter.y
-
-        Imgproc.rectangle(
-            grayMat,
-            Point((cX - width/2).toDouble(), (cY - width/2).toDouble()),
-            Point((cX + height/2).toDouble(), (cY + height/2).toDouble()),
-            scalar, -1)
-
-        val drawBitmap: Bitmap = pupilMaskBitmap.copy(pupilMaskBitmap.config, pupilMaskBitmap.isMutable)
-        Utils.matToBitmap(grayMat, drawBitmap)
-        return drawBitmap
-    }
-
-    fun drawArc(point: Point, pupilMaskBitmap: Bitmap, radius:Int, scalar: Scalar, startAngle: Double, endAngle:Double): Bitmap {
         var colorMat: Mat = Mat()
         Utils.bitmapToMat(pupilMaskBitmap, colorMat) // Android Bitmap are RGB But in opencv Mat, the channels are BGR by default.
         Imgproc.cvtColor(colorMat, colorMat, Imgproc.COLOR_BGR2RGB)
 
-        Imgproc.ellipse(colorMat, point, Size(radius.toDouble(), radius.toDouble()), 0.0, startAngle, endAngle, scalar, -1)
+        Imgproc.rectangle(
+            colorMat, rectStart, rectEnd,
+            scalar, 1)
+        Imgproc.cvtColor(colorMat, colorMat, Imgproc.COLOR_RGB2BGR)
 
         val drawBitmap: Bitmap = pupilMaskBitmap.copy(pupilMaskBitmap.config, pupilMaskBitmap.isMutable)
+        Utils.matToBitmap(colorMat, drawBitmap)
+        return drawBitmap
+    }
+
+    fun drawArc(centerPoint: Point, bitmap: Bitmap, radius:Int, scalar: Scalar, startAngle: Double, endAngle:Double): Bitmap {
+        var colorMat: Mat = Mat()
+        Utils.bitmapToMat(bitmap, colorMat) // Android Bitmap are RGB But in opencv Mat, the channels are BGR by default.
+        Imgproc.cvtColor(colorMat, colorMat, Imgproc.COLOR_BGR2RGB)
+
+        Imgproc.ellipse(colorMat, centerPoint, Size(radius.toDouble(), radius.toDouble()), 0.0, startAngle, endAngle, scalar, -1)
+
+        Imgproc.cvtColor(colorMat, colorMat, Imgproc.COLOR_RGB2BGR)
+
+        val drawBitmap: Bitmap = bitmap.copy(bitmap.config, bitmap.isMutable)
         Utils.matToBitmap(colorMat, drawBitmap)
         return drawBitmap
 

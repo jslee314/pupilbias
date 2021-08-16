@@ -1,7 +1,6 @@
 package com.jslee.pupilbias.pupilSeg
 
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -97,10 +96,10 @@ class PupilSegViewModel @Inject constructor(
         _irisImage.value!!.contourPointList = contourPointList
 
         // [STEP 1]: 동공마스크의 무게중심 구하기
-        _irisImage.value!!.pupilCenter = autoSetPupilAndIris.getPupilCenter(_pupilMaskBitmap.value!!)
+        _irisImage.value!!.circleCenter = autoSetPupilAndIris.getPupilCenter(_pupilMaskBitmap.value!!)
 
         // [STEP 2]: 동공마스크의 예측원 반지름 구하기
-        _irisImage.value!!.pupilRadius = autoSetPupilAndIris.getRadius(_irisImage.value!!.pupilCenter, contourPointList)
+        _irisImage.value!!.circleRadius = autoSetPupilAndIris.getRadius(_irisImage.value!!.circleCenter, contourPointList)
     }
 
     fun updateIrisImage(irisImage: IrisImage) {

@@ -284,8 +284,8 @@ class SegmentationModelExecutor(context: Context, mode: Int, private var useGPU:
 
         val colors = IntArray(NUM_CLASSES)
         colors[0] = Color.BLACK
-        colors[1] = Color.WHITE
-        colors[2] = Color.GRAY
+        colors[1] = Color.GRAY
+        colors[2] = Color.WHITE
         val conf = Bitmap.Config.ARGB_8888
         val pupilBitmap = Bitmap.createBitmap(imageWidth, imageHeight, conf)
         val pupilIrisBitmap = Bitmap.createBitmap(imageWidth, imageHeight, conf)
