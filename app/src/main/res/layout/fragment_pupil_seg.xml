@@ -94,7 +94,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{viewModel.irisImage.segmentationLog}"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     app:BA_status="@{viewModel.irisImage.viewSeg}"
                     app:layout_constraintBottom_toTopOf="@+id/center_btn"
                     app:layout_constraintEnd_toEndOf="@+id/ver_end_guideline"
